@@ -32,8 +32,13 @@ const affitoSlice = createSlice({
         state.error = action.error.message || 'An error occurred';
       });
   },
+  selectors:{
+    selectAll: (state) => state.data,
+  }
 });
 
 export const affitoActions = affitoSlice.actions;
 
 export const affitoReducer = affitoSlice.reducer;
+
+export const affitoSelectors = affitoSlice.selectors;
