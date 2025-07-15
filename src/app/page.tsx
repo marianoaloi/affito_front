@@ -1,3 +1,4 @@
+import AffitoList from "@/components/affitoList";
 import { fetchAffito, useDispatch } from "@/redux";
 import { affitoActions } from "@/redux/services/affito/affitoSlice";
 import Image from "next/image";
@@ -27,6 +28,7 @@ export default function Home() {
         />
         Go to nextjs.org →
       </a>
+      <AffitoList />
     </>
   );
 }
