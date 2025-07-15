@@ -1,12 +1,15 @@
+import { fetchAffito, useDispatch } from "@/redux";
 import { affitoActions } from "@/redux/services/affito/affitoSlice";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  {affitoActions,setAffiti} = 
+  // const dispatch = useDispatch();
+  const [affitoActions,setAffiti] = useState(undefined)
+  const dispatch = useDispatch()
   useEffect(() => {
-    console.log("Hello");
-  }, []);
+    dispatch(fetchAffito())
+  }, [dispatch]);
   return (
     <>
       <a

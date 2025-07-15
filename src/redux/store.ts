@@ -1,12 +1,37 @@
-import { configureStore } from "@reduxjs/toolkit";
-import { affitoReducer } from "./services/affito/affitoSlice";
+import { Action, configureStore, ConfigureStoreOptions, ThunkAction } from "@reduxjs/toolkit";
+import {useSelector as useReduxSelector,   useDispatch as useReduxDispatch, TypedUseSelectorHook} from 'react-redux'
 
+import {reducer} from "./reducer"
+import {middleware} from "./middleware"
 
 export const store = configureStore({
-    reducer: {
-      affiti: affitoReducer,
+    reducer,
+    middleware: (getDefaultMiddleware) => {
+        return getDefaultMiddleware().concat(middleware)
     },
   });
 
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch; 
+  const configreStoreDefaultOptions: ConfigureStoreOptions = { reducer
+   }
+
+export const makeReduxStore = (
+    options: ConfigureStoreOptions = configreStoreDefaultOptions
+) => {
+    const store = configureStore(options)
+
+    return store
+}
+
+export const useDispatch = () => useReduxDispatch<ReduxDispatch>()
+export const useSelector: TypedUseSelectorHook<ReduxState> = useReduxSelector
+
+/* Types */
+export type ReduxStore = typeof store
+export type ReduxState = ReturnType<typeof store.getState>
+export type ReduxDispatch = typeof store.dispatch
+export type ReduxThunkAction<ReturnType = void> = ThunkAction<
+    ReturnType,
+    ReduxState,
+    unknown,
+    Action
+>  
