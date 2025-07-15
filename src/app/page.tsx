@@ -1,3 +1,4 @@
+"use client"
 import AffitoList from "@/components/affitoList";
 import { fetchAffito, useDispatch } from "@/redux";
 import { affitoActions } from "@/redux/services/affito/affitoSlice";
