@@ -1,14 +1,15 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { fetchAffito } from './affitoTrunk';
+import { AffitoEntity } from '@/app/entity/AffitoEntity';
 
 interface AffitoState {
-  data: any;
+  data: AffitoEntity[] ;
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
 }
 
 const initialState: AffitoState = {
-  data: null,
+  data: [],
   loading: 'idle',
   error: null,
 };

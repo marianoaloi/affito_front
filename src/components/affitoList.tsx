@@ -9,7 +9,7 @@ export default function AffitoList() {
 
     return (
        <>
-       {affito ? affito.data.map((affito: AffitoEntity) => (
+       {affito ? affito.map((affito: AffitoEntity) => (
         <div key={affito._id}>
             <h1>{affito.realEstate.title}</h1>
         </div>

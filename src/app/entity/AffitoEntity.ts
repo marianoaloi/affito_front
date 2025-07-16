@@ -6,6 +6,7 @@ export interface AffitoEntity {
   seo: Seo;
   idGeoHash: string;
   mLastUpdate: number;
+  stateMaloi: number;
 }
 
 export interface RealEstate {
