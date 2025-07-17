@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { fetchAffito } from './affitoTrunk';
+import { fetchAffito, updateAffitoState } from './affitoTrunk';
 import { AffitoEntity } from '@/app/entity/AffitoEntity';
 
 interface AffitoState {
@@ -13,7 +13,6 @@ const initialState: AffitoState = {
   loading: 'idle',
   error: null,
 };
-
 
 const affitoSlice = createSlice({
   name: 'affito',
@@ -31,6 +30,14 @@ const affitoSlice = createSlice({
       .addCase(fetchAffito.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.error.message || 'An error occurred';
+      })
+      .addCase(updateAffitoState.fulfilled, (state, action) => {
+        const { realEstateId, newState } = action.meta.arg;
+        const affito = state.data.find(a => a.realEstate.id === realEstateId);
+        const status = action.payload.success;
+        if (affito && status) {
+          affito.stateMaloi = newState;
+        }
       });
   },
   selectors:{
