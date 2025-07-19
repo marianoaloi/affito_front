@@ -8,6 +8,7 @@ import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Box } from "@m
 import MenuIcon from "@mui/icons-material/Menu";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import React, { useState } from "react";
+import MenuAffito from "./menu/menu";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -59,9 +60,7 @@ export default function RootLayout({
                 <MenuItem component={Link} href="/" onClick={handleMenuClose}>Home</MenuItem>
                 <MenuItem component={Link} href="/table" onClick={handleMenuClose}>Table</MenuItem>
               </Menu>
-              <Menu anchorEl={filterAnchorEl} open={Boolean(filterAnchorEl)} onClose={handleFilterClose}>
-                <MenuItem disabled>Filter options (coming soon)</MenuItem>
-              </Menu>
+              <MenuAffito filterAnchorEl={filterAnchorEl} handleFilterClose={handleFilterClose} />
             </Toolbar>
           </AppBar>
           <Box sx={{ mt: 2 }}>{children}</Box>
