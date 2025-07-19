@@ -1,5 +1,5 @@
 import { AffitoEntity } from "@/app/entity/AffitoEntity"
-import { affitoActions, affitoSelectors, selectAllAffito, useSelector } from "@/redux"
+import { selectAllAffito, useSelector } from "@/redux"
 
 
 

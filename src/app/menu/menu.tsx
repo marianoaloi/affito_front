@@ -1,4 +1,4 @@
-import { Menu, MenuItem, Box, TextField, FormControlLabel, Checkbox, Select, MenuItem as SelectItem, InputLabel, FormControl } from "@mui/material";
+import { Menu, Box, TextField, Select, MenuItem as SelectItem, InputLabel, FormControl } from "@mui/material";
 import { useSelector, useDispatch } from "@/redux";
 import { setFilterAffito } from "@/redux/services/filter/filterTrunk";
 import { selectFilter } from "@/redux/services/filter/filterSlice";

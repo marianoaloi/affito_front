@@ -1,6 +1,6 @@
 "use client"
 import FeaturesTablePage from "./FeaturesTablePage";
-import { affitoActions, fetchAffito, selectFilter, useDispatch, useSelector } from "@/redux";
+import { fetchAffito, selectFilter, useDispatch, useSelector } from "@/redux";
 import { selectAllAffito } from "@/redux/services/affito/affitoSelectors";
 import { useEffect } from "react";
 
