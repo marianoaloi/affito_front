@@ -30,7 +30,7 @@ const filterSlice = createSlice({
   initialState,
   reducers: {},
   selectors: {
-    selectFilter: (state) => state.filter,
+    getFilter: (state) => state.filter,
   },
   extraReducers: (builder) => {
     builder.addCase(setFilterAffito.fulfilled, (state, action) => {
@@ -42,4 +42,4 @@ const filterSlice = createSlice({
 
 export const filterReducer = filterSlice.reducer;
 export const filterActions = filterSlice.actions;
-export const selectFilter = filterSlice.selectors.selectFilter;
+export const selectFilter = filterSlice.selectors.getFilter;
