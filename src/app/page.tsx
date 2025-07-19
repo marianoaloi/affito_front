@@ -1,7 +1,7 @@
 "use client"
 import AffitoList from "@/components/affitoList";
 import { fetchAffito, selectFilter, useDispatch, useSelector } from "@/redux";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function Home() {
   const dispatch = useDispatch()
