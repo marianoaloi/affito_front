@@ -3,7 +3,7 @@ import React from 'react';
 import { AffitoEntity, Feature } from '../entity/AffitoEntity';
 import { Box, IconButton, Stack, Tooltip } from '@mui/material';
 
-import { CheckCircleOutline, HourglassEmpty, CancelOutlined } from '@mui/icons-material';
+import { CheckCircleSharp, HourglassEmptySharp, CancelSharp } from '@mui/icons-material';
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { updateAffitoState } from '@/redux/services/affito/affitoTrunk';
@@ -72,7 +72,7 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
                 onClick={() => handleStateChange(1, params.row.id)}
                 aria-label="Approve"
               >
-                <CheckCircleOutline />
+                <CheckCircleSharp />
               </IconButton>
             </Tooltip>
             <Tooltip title="Wait">
@@ -81,7 +81,7 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
                 onClick={() => handleStateChange(2, params.row.id)}
                 aria-label="Wait"
               >
-                <HourglassEmpty />
+                <HourglassEmptySharp />
               </IconButton>
             </Tooltip>
             <Tooltip title="Deny">
@@ -90,7 +90,7 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
                 onClick={() => handleStateChange(0, params.row.id)}
                 aria-label="Deny"
               >
-                <CancelOutlined />
+                <CancelSharp />
               </IconButton>
             </Tooltip>
           </Stack>
