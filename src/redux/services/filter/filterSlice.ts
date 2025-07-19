@@ -42,4 +42,4 @@ const filterSlice = createSlice({
 
 export const filterReducer = filterSlice.reducer;
 export const filterActions = filterSlice.actions;
-export const selectFilter = filterSlice.selectors.getFilter;
+export const getFilter = filterSlice.selectors.getFilter;

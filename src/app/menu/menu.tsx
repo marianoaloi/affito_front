@@ -1,7 +1,7 @@
 import { Menu, Box, TextField, Select, MenuItem as SelectItem, InputLabel, FormControl } from "@mui/material";
 import { useSelector, useDispatch } from "@/redux";
 import { setFilterAffito } from "@/redux/services/filter/filterTrunk";
-import { selectFilter } from "@/redux/services/filter/filterSlice";
+import { getFilter } from "@/redux/services/filter/filterSlice";
 import { FilterAffito } from "@/redux/services/filter/filterTypes";
 
 interface MenuAffitoProps {
@@ -10,7 +10,7 @@ interface MenuAffitoProps {
 }
 
 export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAffitoProps) {
-  const filter = useSelector(selectFilter) as FilterAffito;
+  const filter = useSelector(getFilter) as FilterAffito;
   const dispatch = useDispatch();
 
   const handleChange = (field: keyof FilterAffito, value: any) => {
