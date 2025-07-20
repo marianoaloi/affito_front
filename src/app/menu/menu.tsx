@@ -4,6 +4,12 @@ import { setFilterAffito } from "@/redux/services/filter/filterTrunk";
 import { getFilter } from "@/redux/services/filter/filterSlice";
 import { FilterAffito } from "@/redux/services/filter/filterTypes";
 
+
+import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { authFirebase } from '@/app/firebaseConfig';
+
+const provider = new GoogleAuthProvider();
+
 interface MenuAffitoProps {
   filterAnchorEl: HTMLElement | null;
   handleFilterClose: () => void;

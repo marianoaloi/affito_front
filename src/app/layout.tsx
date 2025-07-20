@@ -8,6 +8,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import React, { useState } from "react";
 import MenuAffito from "./menu/menu";
+import './firebaseConfig'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,8 +40,10 @@ export default function RootLayout({
   const handleFilterClose = () => {
     setFilterAnchorEl(null);
   };
+  
 
   return (
+    
     <ProviderRedux>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
