@@ -5,9 +5,45 @@ import { getFilter } from "@/redux/services/filter/filterSlice";
 import { FilterAffito } from "@/redux/services/filter/filterTypes";
 
 
-// import { GoogleAuthProvider } from 'firebase/auth';
+// authService.ts (or directly in your component)
+import { authFirebase, GoogleAuthProvider, signInWithPopup, signOut } from '../firebaseConfig';
 
-// const provider = new GoogleAuthProvider();
+export const signInWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    provider.addScope('profile');
+    provider.addScope('email');
+    const result = await signInWithPopup(authFirebase, provider);
+    // The signed-in user info.
+    const user = result.user;
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential?.accessToken;
+    console.log("Signed in user:", user);
+    console.log("ID Token:", await user.getIdToken()); // Get the ID token
+    return user;
+  } catch (error: any) {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.customData?.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    console.error("Error signing in with Google:", errorMessage);
+    throw error;
+  }
+};
+
+export const signOutUser = async () => {
+  try {
+    await signOut(authFirebase);
+    console.log("User signed out.");
+  } catch (error) {
+    console.error("Error signing out:", error);
+    throw error;
+  }
+};
 
 interface MenuAffitoProps {
   filterAnchorEl: HTMLElement | null;
@@ -25,7 +61,7 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
   return (
     <Menu anchorEl={filterAnchorEl} open={Boolean(filterAnchorEl)} onClose={handleFilterClose}>
       <Box sx={{ p: 2, width: 300, display: 'flex', flexDirection: 'column', gap: 2 }}>
- 
+
         <TextField
           label="Price Min"
           type="number"
