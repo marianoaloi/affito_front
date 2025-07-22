@@ -5,10 +5,9 @@ import { getFilter } from "@/redux/services/filter/filterSlice";
 import { FilterAffito } from "@/redux/services/filter/filterTypes";
 
 
-import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
-import { authFirebase } from '@/app/firebaseConfig';
+// import { GoogleAuthProvider } from 'firebase/auth';
 
-const provider = new GoogleAuthProvider();
+// const provider = new GoogleAuthProvider();
 
 interface MenuAffitoProps {
   filterAnchorEl: HTMLElement | null;
