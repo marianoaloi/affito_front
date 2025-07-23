@@ -1,7 +1,9 @@
 import { AffitoEntity } from "@/app/entity/AffitoEntity";
 import { FilterAffito } from "../filter/filterTypes";
 
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'https://us-central1-affitiudine.cloudfunctions.net/api';
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://us-central1-affitiudine.cloudfunctions.net/api' : 'http://localhost:5000';
+// 'https://us-central1-affitiudine.cloudfunctions.net/api';
+console.log(process.env.NODE_ENV)
 
 const getAffiti =
     async (filter?: FilterAffito): Promise<AffitoEntity[]> => {
@@ -24,11 +26,12 @@ export type returnAffitoState = {
     message: string;
 }
 
-const setAffitoState = async (realEstateId: string | number, newState: number): Promise<returnAffitoState> => {
+const setAffitoState = async (realEstateId: string | number, newState: number, token: string | undefined): Promise<returnAffitoState> => {
     const response = await fetch(`${API_BASE_URL}/api/affito/${realEstateId}/state`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({ stateMaloi: newState }),
     });

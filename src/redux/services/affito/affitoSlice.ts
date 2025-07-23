@@ -31,17 +31,29 @@ const affitoSlice = createSlice({
         state.loading = 'failed';
         state.error = action.error.message || 'An error occurred';
       })
+      
+      .addCase(updateAffitoState.pending, (state) => {
+        state.loading = 'pending';
+      })
+      .addCase(updateAffitoState.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'An error occurred';
+      })
       .addCase(updateAffitoState.fulfilled, (state, action) => {
         const { realEstateId, newState } = action.meta.arg;
         const affito = state.data.find(a => a.realEstate.id === realEstateId);
         const status = action.payload.success;
         if (affito && status) {
           affito.stateMaloi = newState;
+        }else
+        {
+          state.error = !affito ? "Affito not found" : action.payload.message
         }
       });
   },
   selectors:{
     selectAll: (state) => state.data,
+    getError: (state) => state.error
   }
 });
 

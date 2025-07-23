@@ -1,13 +1,14 @@
 "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import { AffitoEntity, Feature } from '../entity/AffitoEntity';
-import { Box, IconButton, Stack, Tooltip } from '@mui/material';
+import { Alert, AlertTitle, Box, IconButton, Stack, Tooltip } from '@mui/material';
 
 import { CheckCircleSharp, HourglassEmptySharp, CancelSharp } from '@mui/icons-material';
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { updateAffitoState } from '@/redux/services/affito/affitoTrunk';
-import { useDispatch } from '@/redux';
+import { getErrorAffito, useDispatch, useSelector } from '@/redux';
+import { getToken } from '@/redux/services/auth/authSlice';
 
 // Accept affiti as a prop
 interface FeaturesTablePageProps {
@@ -20,12 +21,16 @@ type AffitoState = 1 | 2 | 0 | undefined;
 const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
   const coluns = new Set<string>();
   const dispatch = useDispatch();
+  const token = useSelector(getToken);
+  const errorMSG = useSelector(getErrorAffito)
 
   const handleStateChange = async (newState: AffitoState, realEstateId: number) => {
     try {
 
-      if (newState !== undefined) {
-        dispatch(updateAffitoState({ realEstateId, newState }));
+      if (newState !== undefined && token !== undefined) {
+        dispatch(updateAffitoState({ realEstateId, newState, token }));
+      } else {
+        console.error("Token empty")
       }
     } catch (err) {
       // Optionally handle error
@@ -98,6 +103,7 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
       }
     },
   ]
+
   coluns.forEach((colun: string) => {
     columns.push({ field: colun, headerName: colun, width: 100 })
   })
@@ -130,28 +136,36 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
     )
 
   return (
-    <Box sx={{ height: '100%', width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        columnVisibilityModel={
-          {
-            id: false,
-            stateMaloi: false,
+    <>
+      <Box sx={{ height: '100%', width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          columnVisibilityModel={
+            {
+              id: false,
+              stateMaloi: false,
+            }
           }
-        }
-        initialState={{
-          pagination: {
-            paginationModel: {
-              pageSize: 50,
+          initialState={{
+            pagination: {
+              paginationModel: {
+                pageSize: 50,
+              },
             },
-          },
-        }}
-        pageSizeOptions={[5, 10, 20, 50, 100]}
-        checkboxSelection={false}
-        disableRowSelectionOnClick
-      />
-    </Box>
+          }}
+          pageSizeOptions={[5, 10, 20, 50, 100]}
+          checkboxSelection={false}
+          disableRowSelectionOnClick
+        />
+      </Box>
+      {errorMSG ?
+        <Alert severity='error' onClose={() => { }} >
+          <AlertTitle>Error</AlertTitle>
+          {errorMSG}
+        </Alert>
+        : ''}
+    </>
   );
 };
 

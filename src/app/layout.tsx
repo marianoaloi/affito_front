@@ -9,6 +9,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import React, { useState } from "react";
 import MenuAffito from "./menu/menu";
 import './firebaseConfig'
+import AuthProvider from "./menu/authProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -62,6 +63,7 @@ export default function RootLayout({
                 <MenuItem component={Link} href="/" onClick={handleMenuClose}>Home</MenuItem>
                 <MenuItem component={Link} href="/table" onClick={handleMenuClose}>Table</MenuItem>
               </Menu>
+              <AuthProvider />
               <MenuAffito filterAnchorEl={filterAnchorEl} handleFilterClose={handleFilterClose} />
             </Toolbar>
           </AppBar>

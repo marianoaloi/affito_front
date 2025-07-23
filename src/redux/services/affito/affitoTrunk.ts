@@ -11,7 +11,7 @@ export const fetchAffito = createAsyncThunk(
 
 export const updateAffitoState = createAsyncThunk(
   'affito/updateAffitoState',
-  async ({ realEstateId, newState }: { realEstateId: string | number, newState: number }) => {
-    return await setAffitoState(realEstateId, newState);
+  async ({ realEstateId, newState, token }: { realEstateId: string | number, newState: number, token: string }) => {
+    return await setAffitoState(realEstateId, newState, token);
   }
 );
