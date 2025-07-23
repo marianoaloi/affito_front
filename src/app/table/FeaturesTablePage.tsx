@@ -1,5 +1,5 @@
 "use client"
-import React, { useState } from 'react';
+import React from 'react';
 import { AffitoEntity, Feature } from '../entity/AffitoEntity';
 import { Alert, AlertTitle, Box, IconButton, Stack, Tooltip } from '@mui/material';
 
