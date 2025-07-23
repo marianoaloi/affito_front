@@ -1,10 +1,11 @@
-import express from 'express';
-import { MongoClient } from 'mongodb';
+import { Router } from "express";
+import { MongoClient } from "mongodb";
 
-import { config } from './env';
+import { config } from "./env";
+import authenticate from "./firebaseAuth";
 
 export const apiRouter = (client: MongoClient) => {
-  const router = express.Router();
+  const router = Router();
 
   /**
    * @swagger
@@ -15,7 +16,7 @@ export const apiRouter = (client: MongoClient) => {
    *       properties:
    *         _id:
    *           type: integer
-   *           description: The document's unique identifier.
+   *           description: The document"s unique identifier.
    *         stateMaloi:
    *           type: integer
    *           description: The state of the document (0, 1, or 2).
@@ -78,13 +79,13 @@ export const apiRouter = (client: MongoClient) => {
    *                 data:
    *                   type: array
    *                   items:
-   *                     $ref: '#/components/schemas/Affito'
+   *                     $ref: "#/components/schemas/Affito"
    *                 count:
    *                   type: integer
    *       500:
    *         description: Failed to fetch data from database.
    */
-  router.post('/affito', async (req, res) => {
+  router.post("/affito", async (req, res) => {
     try {
       const db = client.db(config.mongodb.database);
       const collection = db.collection(config.mongodb.collection);
@@ -130,10 +131,10 @@ export const apiRouter = (client: MongoClient) => {
         count: documents.length
       });
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
       res.status(500).json({
         success: false,
-        error: 'Failed to fetch data from database'
+        error: "Failed to fetch data from database"
       });
     }
   });
@@ -162,13 +163,13 @@ export const apiRouter = (client: MongoClient) => {
    *                 success:
    *                   type: boolean
    *                 data:
-   *                   $ref: '#/components/schemas/Affito'
+   *                   $ref: "#/components/schemas/Affito"
    *       404:
    *         description: Document not found.
    *       500:
    *         description: Failed to fetch document.
    */
-  router.get('/affito/:id', async (req, res) => {
+  router.get("/affito/:id", async (req, res) => {
     try {
       const { id } = req.params;
       const db = client.db(config.mongodb.database);
@@ -177,12 +178,10 @@ export const apiRouter = (client: MongoClient) => {
 
       // Find document by ID
       const document = await collection.findOne(filter);
-
+      let merror = "";
       if (!document) {
-        return res.status(404).json({
-          success: false,
-          error: 'Document not found'
-        });
+        merror = "Document not found";
+        throw new Error(merror);
       }
 
       res.json({
@@ -190,10 +189,10 @@ export const apiRouter = (client: MongoClient) => {
         data: document
       });
     } catch (error) {
-      console.error('Error fetching document:', error);
+      console.error("Error fetching document:", error);
       res.status(500).json({
         success: false,
-        error: 'Failed to fetch document'
+        error: "Failed to fetch document " + error
       });
     }
   });
@@ -244,18 +243,23 @@ export const apiRouter = (client: MongoClient) => {
    *       500:
    *         description: Failed to update document.
    */
-  router.post('/affito/:id/state', async (req, res) => {
+  router.post("/affito/:id/state", async (req, res, next) => {
+    authenticate(req, res, next);
+    if (!(req as any).user) {
+      return ;
+    }
+
     try {
       const { id } = req.params;
       const { stateMaloi } = req.body;
 
       const numericState = parseInt(stateMaloi, 10);
 
+      let merror = "";
+
       if (isNaN(numericState) || ![0, 1, 2].includes(numericState)) {
-        return res.status(400).json({
-          success: false,
-          error: 'Invalid state value. Must be 0, 1, or 2. Sent: ' + stateMaloi
-        });
+        merror = "Invalid state value. Must be 0, 1, or 2. Sent: " + stateMaloi;
+        throw new Error(merror);
       }
 
       const db = client.db(config.mongodb.database);
@@ -268,23 +272,22 @@ export const apiRouter = (client: MongoClient) => {
       );
 
       if (result.matchedCount === 0) {
-        return res.status(404).json({
-          success: false,
-          error: 'Document not found'
-        });
+        merror = "Document not found";
+        throw new Error(merror);
       }
 
       res.json({
         success: true,
-        message: 'State updated successfully'
+        message: "State updated successfully"
       });
     } catch (error) {
-      console.error('Error updating document:', error);
+      console.error("Error updating document:", error);
       res.status(500).json({
         success: false,
-        error: 'Failed to update document'
+        error: "Failed to update document " + error
       });
     }
+    return;
   });
 
   // Health check endpoint
@@ -310,10 +313,10 @@ export const apiRouter = (client: MongoClient) => {
    *                   type: string
    *                   format: date-time
    */
-  router.get('/health', (req, res) => {
+  router.get("/health", (req, res) => {
     res.json({
       success: true,
-      message: 'Server is running',
+      message: "Server is running",
       timestamp: new Date().toISOString()
     });
   });

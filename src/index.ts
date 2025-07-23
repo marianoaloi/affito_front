@@ -17,10 +17,10 @@ import * as logger from "firebase-functions/logger";
 // running at the same time. This helps mitigate the impact of unexpected
 // traffic spikes by instead downgrading performance. This limit is a
 // per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
+// `maxInstances` option in the function"s options, e.g.
+// `onRequest({maxInstances: 5}, (req, res) => {...})`.
 // NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
+// functions should each use functions.runWith({maxInstances: 10}) instead.
 // In the v1 API, each function can only serve one request per container, so
 // this will be the maximum concurrent request count.
 setGlobalOptions({ maxInstances: 10 });
@@ -28,17 +28,16 @@ setGlobalOptions({ maxInstances: 10 });
 // export const helloWorld = onRequest((request, response) => {
 //   logger.info("Hello logs!", {structuredData: true});
 //   response.send("Hello from Firebase!");
-// });
+//});
 
-import express from 'express';
-import cors from 'cors';
-import { MongoClient } from 'mongodb';
-import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
-import fs from 'fs';
-import path from 'path';
-import { config } from './env';
-import { apiRouter } from './api';
+import express from "express";
+import cors from "cors";
+import { MongoClient } from "mongodb";
+import swaggerUi from "swagger-ui-express";
+import swaggerJsdoc from "swagger-jsdoc";
+import path from "path";
+import { config } from "./env";
+import { apiRouter } from "./api";
 
 
 const app = express();
@@ -46,17 +45,20 @@ const PORT = config.server.port;
 
 // List of allowed origins
 const allowedOrigins = [
+    "http://localhost:3000",
     "https://affiti.aloi.com.br",
 ];
 
 // Middleware
 app.use(cors({
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 
-    origin: function (origin: string | undefined, callback: any) {
+    origin: function(origin: string | undefined, callback: any) {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
+        console.log
+        logger.info("Origin: " + origin, { structuredData: true });
         if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         } else {
@@ -69,7 +71,9 @@ app.use(express.json());
 
 // MongoDB connection
 let client: MongoClient;
-
+/**
+ * Init MOngo and service
+ */
 async function connectToMongoDB() {
     try {
         // Read the certificate file
@@ -82,46 +86,45 @@ async function connectToMongoDB() {
         });
 
         await client.connect();
-        console.log('Connected to MongoDB successfully');
+        console.log("Connected to MongoDB successfully");
 
         // Test the connection
         const db = client.db(config.mongodb.database);
         await db.admin().ping();
-        console.log('Database ping successful');
+        console.log("Database ping successful");
 
         // Swagger (OpenAPI) setup
         const swaggerOptions = {
             swaggerDefinition: {
-                openapi: '3.0.0',
+                openapi: "3.0.0",
                 info: {
-                    title: 'Serveraffito API Documentation',
-                    version: '1.0.0',
-                    description: 'This is the API documentation for the Serveraffito project, allowing interaction with affito documents.',
+                    title: "Serveraffito API Documentation",
+                    version: "1.0.0",
+                    description: "This is the API documentation for the Serveraffito project, "+
+                    "allowing interaction with affito documents.",
                 },
                 servers: [
                     {
                         url: `http://localhost:${PORT}`,
-                        description: 'Development server',
+                        description: "Development server",
                     },
                 ],
             },
-            apis: [path.join(__dirname, './api.ts')], // Path to the file with API annotations
+            apis: [path.join(__dirname, "./api.ts")], // Path to the file with API annotations
         };
         const swaggerDocs = swaggerJsdoc(swaggerOptions);
-        app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+        app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 
-        app.get("/",  (req, res) => {
+        app.get("/", (req, res) => {
             logger.info("Hello logs!", { structuredData: true });
             res.send("Hello World!");
         });
 
-
-
         // API Routes
-        app.use('/api', apiRouter(client!));
+        app.use("/api", apiRouter(client!));
     } catch (error) {
-        console.error('Failed to connect to MongoDB:', error);
+        console.error("Failed to connect to MongoDB:", error);
         process.exit(1);
     }
 }
@@ -129,13 +132,27 @@ async function connectToMongoDB() {
 
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
-    console.error('Unhandled error:', err);
+    console.error("Unhandled error:", err);
     res.status(500).json({
         success: false,
-        error: 'Internal server error'
+        error: "Internal server error"
     });
 });
 
-connectToMongoDB();
-import {onRequest} from "firebase-functions/v2/https";
+// Start server
+async function startServer() {
+  await connectToMongoDB();
+
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    console.log(`Health check: http://localhost:${PORT}/api/health`);
+    console.log(`Affito data: http://localhost:${PORT}/api/affito`);
+    console.log(`Affito swagger: http://localhost:${PORT}/api-docs`);
+  });
+}
+
+import { onRequest } from "firebase-functions/v2/https";
 exports.api = onRequest(app);
+
+
+startServer().catch(console.error); 
