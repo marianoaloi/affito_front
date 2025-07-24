@@ -9,16 +9,12 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { clearAffitoError, updateAffitoState } from '@/redux/services/affito/affitoTrunk';
 import { getErrorAffito, useDispatch, useSelector } from '@/redux';
 import { getToken } from '@/redux/services/auth/authSlice';
-
-// Accept affiti as a props
-interface FeaturesTablePageProps {
-  affiti: AffitoEntity[];
-}
+import { AffitiPageProps } from '../entity/AffitiPageProps';
 
 
 type AffitoState = 1 | 2 | 0 | undefined;
 
-const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
+const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   const coluns = new Set<string>();
   const dispatch = useDispatch();
   const token = useSelector(getToken);
