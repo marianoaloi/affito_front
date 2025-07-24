@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { fetchAffito, updateAffitoState } from './affitoTrunk';
+import { clearAffitoError, fetchAffito, updateAffitoState } from './affitoTrunk';
 import { AffitoEntity } from '@/app/entity/AffitoEntity';
 
 interface AffitoState {
@@ -17,7 +17,11 @@ const initialState: AffitoState = {
 const affitoSlice = createSlice({
   name: 'affito',
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAffito.pending, (state) => {
@@ -30,6 +34,10 @@ const affitoSlice = createSlice({
       .addCase(fetchAffito.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.error.message || 'An error occurred';
+      })
+
+      .addCase(clearAffitoError.fulfilled, (state) => {
+        state.error = null; 
       })
       
       .addCase(updateAffitoState.pending, (state) => {

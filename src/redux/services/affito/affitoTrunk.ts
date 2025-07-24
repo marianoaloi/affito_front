@@ -15,3 +15,8 @@ export const updateAffitoState = createAsyncThunk(
     return await setAffitoState(realEstateId, newState, token);
   }
 );
+
+export const clearAffitoError = createAsyncThunk(
+  'affito/clearAffitoError',  () => {
+    return undefined;
+  })

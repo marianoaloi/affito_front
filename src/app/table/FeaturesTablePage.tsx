@@ -1,16 +1,16 @@
 "use client"
-import React from 'react';
+import React, { useState } from 'react';
 import { AffitoEntity, Feature } from '../entity/AffitoEntity';
 import { Alert, AlertTitle, Box, IconButton, Stack, Tooltip } from '@mui/material';
 
 import { CheckCircleSharp, HourglassEmptySharp, CancelSharp } from '@mui/icons-material';
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { updateAffitoState } from '@/redux/services/affito/affitoTrunk';
+import { clearAffitoError, updateAffitoState } from '@/redux/services/affito/affitoTrunk';
 import { getErrorAffito, useDispatch, useSelector } from '@/redux';
 import { getToken } from '@/redux/services/auth/authSlice';
 
-// Accept affiti as a prop
+// Accept affiti as a props
 interface FeaturesTablePageProps {
   affiti: AffitoEntity[];
 }
@@ -23,6 +23,7 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
   const dispatch = useDispatch();
   const token = useSelector(getToken);
   const errorMSG = useSelector(getErrorAffito)
+  const [errorTable,setError] = useState<string | undefined>(undefined);
 
   const handleStateChange = async (newState: AffitoState, realEstateId: number) => {
     try {
@@ -30,11 +31,11 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
       if (newState !== undefined && token !== undefined) {
         dispatch(updateAffitoState({ realEstateId, newState, token }));
       } else {
-        console.error("Token empty")
+        setError("Token empty")
       }
     } catch (err) {
       // Optionally handle error
-      console.error('Failed to update state:', err);
+      setError('Failed to update state:'+(err instanceof Error ? err.message : 'Unknown error'));
     }
   };
 
@@ -160,9 +161,15 @@ const FeaturesTablePage: React.FC<FeaturesTablePageProps> = ({ affiti }) => {
         />
       </Box>
       {errorMSG ?
-        <Alert severity='error' onClose={() => { }} >
+        <Alert severity='error' onClose={() => {dispatch(clearAffitoError()) }} >
           <AlertTitle>Error</AlertTitle>
           {errorMSG}
+        </Alert>
+        : ''}
+      {errorTable ?
+        <Alert severity='error' onClose={() => {setError(undefined) }} >
+          <AlertTitle>Error</AlertTitle>
+          {errorTable}
         </Alert>
         : ''}
     </>
