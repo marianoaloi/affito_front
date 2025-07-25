@@ -1,11 +1,10 @@
 "use client";
 
 import { selectAllAffito, getFilter, fetchAffito, useDispatch } from "@/redux";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import dynamic from "next/dynamic";
-import { promises } from "dns";
-const Map = dynamic(() => import('./Map').then((mod) => mod.Map), { loading:() => <p>Loading Map</p>, ssr: false });
+import { Map } from "./Map";
+
 
 
 export default function MapPage() {
@@ -13,13 +12,18 @@ export default function MapPage() {
       const dispatch = useDispatch();
       const affiti = useSelector(selectAllAffito);
       const filter = useSelector(getFilter)
-      const [map, setMap] = useState<JSX.Element | null>(null);
+      
+  const [mounted, setMounted] = useState(false);
       useEffect(() => {
           dispatch(fetchAffito(filter));
-          setMap(<Map affiti={affiti} />);
+          
+    setMounted(true);
       }, [dispatch, filter]);
       
+        if (!mounted) {
+    return <div>Loading Map...</div>;
+  }
 
-      return affiti && affiti.length > 0 ? map : <div>Nessun affito trovato</div>;
+      return affiti && affiti.length > 0 ? <Map affiti={affiti} /> : <div>Nessun affito trovato</div>;
   
 }

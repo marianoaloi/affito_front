@@ -6,7 +6,9 @@ import { Photo, Photos } from './Map.styled';
 
 
 export const Map: React.FC<AffitiPageProps> = ({ affiti }) => {
-  const position: [number, number] = [46.0689, 13.2224];
+  const position: [number, number] = [46.0689, 13.2224]; // Default position (Udine coordinates)
+
+
 
 
   useEffect(() => {
@@ -23,7 +25,10 @@ export const Map: React.FC<AffitiPageProps> = ({ affiti }) => {
       popupAnchor: [1, -34],
       shadowSize: [41, 41]
     });
+    
   }, []);
+
+
 
   return (
     <MapContainer center={position} zoom={13} scrollWheelZoom={false} style={{ height: "100%", width: "100%" }}>
