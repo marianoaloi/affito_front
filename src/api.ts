@@ -243,10 +243,10 @@ export const apiRouter = (client: MongoClient) => {
    *       500:
    *         description: Failed to update document.
    */
-  router.post("/affito/:id/state", async (req, res, next) => {
-    authenticate(req, res, next);
-    if (!(req as any).user) {
-      return ;
+  router.post("/affito/:id/state", async (req, res) => {
+    const user = await authenticate(req, res);
+    if (!user) {
+      return;
     }
 
     try {
@@ -266,9 +266,15 @@ export const apiRouter = (client: MongoClient) => {
       const collection = db.collection(config.mongodb.collection);
       const filter = { _id: parseInt(id) as any };
 
+      if(user.email != 'mariano@aloi.com.br'){
+        merror = "Only Mariano Aloi can change the status.";
+        throw new Error(merror);
+      
+      }
+
       const result = await collection.updateOne(
         filter,
-        { $set: { stateMaloi: numericState } }
+        { $set: { stateMaloi: numericState, mLastUpdate: new Date().getTime() / 1000, userUpdate: user.email } }
       );
 
       if (result.matchedCount === 0) {

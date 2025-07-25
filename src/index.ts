@@ -56,9 +56,9 @@ app.use(cors({
 
     origin: function(origin: string | undefined, callback: any) {
         // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) return callback(null, true);
-        console.log
-        logger.info("Origin: " + origin, { structuredData: true });
+        if (!origin) {
+            return callback(null, true);
+        }
         if (allowedOrigins.includes(origin)) {
             return callback(null, true);
         } else {
@@ -100,8 +100,8 @@ async function connectToMongoDB() {
                 info: {
                     title: "Serveraffito API Documentation",
                     version: "1.0.0",
-                    description: "This is the API documentation for the Serveraffito project, "+
-                    "allowing interaction with affito documents.",
+                    description: "This is the API documentation for the Serveraffito project, " +
+                        "allowing interaction with affito documents.",
                 },
                 servers: [
                     {
@@ -140,19 +140,22 @@ app.use((err: Error, req: express.Request, res: express.Response, next: express.
 });
 
 // Start server
+/**
+ * Prepare the server
+ */
 async function startServer() {
-  await connectToMongoDB();
+    await connectToMongoDB();
 
-  app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log(`Health check: http://localhost:${PORT}/api/health`);
-    console.log(`Affito data: http://localhost:${PORT}/api/affito`);
-    console.log(`Affito swagger: http://localhost:${PORT}/api-docs`);
-  });
+    app.listen(PORT, () => {
+        logger.log(`Server is running on port ${PORT}`);
+        logger.log(`Health check: http://localhost:${PORT}/api/health`);
+        logger.log(`Affito data: http://localhost:${PORT}/api/affito`);
+        logger.log(`Affito swagger: http://localhost:${PORT}/api-docs`);
+    });
 }
 
 import { onRequest } from "firebase-functions/v2/https";
 exports.api = onRequest(app);
 
 
-startServer().catch(console.error); 
+startServer().catch(logger.error);

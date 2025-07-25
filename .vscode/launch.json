@@ -21,7 +21,10 @@
             "name": "Node vanilla${cwd}",
             "type": "node",
             "request": "launch",
-            "program": "lib/index.js"
+            "program": "lib/index.js",
+            "env": {
+                "NODE_ENV": "development"
+            }
 
         }
     ]
