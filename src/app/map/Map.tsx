@@ -1,12 +1,7 @@
-"use client";
 import { useEffect } from 'react';
 import { AffitiPageProps } from '../entity/AffitiPageProps';
 import 'leaflet/dist/leaflet.css';
-import dinamic from 'next/dynamic';
-const MapContainer = dinamic(() => import('react-leaflet').then((mod) => mod.MapContainer), { ssr: false });
-const Marker = dinamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
-const Popup = dinamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
-const TileLayer = dinamic(() => import('react-leaflet').then((mod) => mod.TileLayer), { ssr: false });
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Photo, Photos } from './Map.styled';
 
 
