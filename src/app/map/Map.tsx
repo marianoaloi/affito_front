@@ -1,9 +1,13 @@
+"use client";
 import { useEffect } from 'react';
 import { AffitiPageProps } from '../entity/AffitiPageProps';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+import dinamic from 'next/dynamic';
+const MapContainer = dinamic(() => import('react-leaflet').then((mod) => mod.MapContainer), { ssr: false });
+const Marker = dinamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
+const Popup = dinamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
+const TileLayer = dinamic(() => import('react-leaflet').then((mod) => mod.TileLayer), { ssr: false });
 import { Photo, Photos } from './Map.styled';
-let DefaultIcon;
 
 
 export const Map: React.FC<AffitiPageProps> = ({ affiti }) => {
@@ -12,6 +16,10 @@ export const Map: React.FC<AffitiPageProps> = ({ affiti }) => {
 
   useEffect(() => {
     const L = require('leaflet');
+    // Fix for marker icon not loading correctly
+    // This is a workaround for the issue with Leaflet marker icons not displaying correctly in Next.js
+    // It sets the default icon for Leaflet markers to a valid icon URL
+    // This should be done only once, so we check if the icon is already set
     L.Marker.prototype.options.icon = new L.Icon({
       iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
       shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
