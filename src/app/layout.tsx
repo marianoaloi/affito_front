@@ -62,6 +62,7 @@ export default function RootLayout({
               <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleMenuClose}>
                 <MenuItem component={Link} href="/" onClick={handleMenuClose}>Home</MenuItem>
                 <MenuItem component={Link} href="/table" onClick={handleMenuClose}>Table</MenuItem>
+                <MenuItem component={Link} href="/map" onClick={handleMenuClose}>Map</MenuItem>
               </Menu>
               <AuthProvider />
               <MenuAffito filterAnchorEl={filterAnchorEl} handleFilterClose={handleFilterClose} />

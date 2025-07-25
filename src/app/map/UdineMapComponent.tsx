@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import type { LatLngTuple } from "leaflet";
 import L from "leaflet";
@@ -9,10 +9,7 @@ import { selectAllAffito, useSelector } from "@/redux";
 const UDINE_POSITION: LatLngTuple = [46.0689, 13.2224];
 
 export default function UdineMapComponent() {
-    const [info] = useState({
-        title: "Udine, Italia",
-        description: "Questa è Udine! Puoi personalizzare queste informazioni."
-    });
+
 
     const affiti = useSelector(selectAllAffito);
     useEffect(() => {
