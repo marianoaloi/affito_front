@@ -3,8 +3,8 @@
 import { selectAllAffito, getFilter, fetchAffito, useDispatch } from "@/redux";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Map } from "./Map";
-
+import dynamic from "next/dynamic";
+const Map = dynamic(() => import("./Map").then((mod) => mod.Map), { loading:() => <p>Loading Map</p>, ssr: false });
 
 
 export default function MapPage() {
