@@ -48,6 +48,7 @@ const affitoSlice = createSlice({
         state.error = action.error.message || 'An error occurred';
       })
       .addCase(updateAffitoState.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
         const { realEstateId, newState } = action.meta.arg;
         const affito = state.data.find(a => a.realEstate.id === realEstateId);
         const status = action.payload.success;
@@ -59,10 +60,6 @@ const affitoSlice = createSlice({
         }
       });
   },
-  selectors:{
-    selectAll: (state) => state.data,
-    getError: (state) => state.error
-  }
 });
 
 export const affitoActions = affitoSlice.actions;

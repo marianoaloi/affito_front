@@ -3,7 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import ProviderRedux from "./providerRedux";
 import Link from "next/link";
-import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem, Box } from "@mui/material";
+import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import React, { useState } from "react";
@@ -68,7 +68,7 @@ export default function RootLayout({
               <MenuAffito filterAnchorEl={filterAnchorEl} handleFilterClose={handleFilterClose} />
             </Toolbar>
           </AppBar>
-          <Box sx={{ mt: 2 }}>{children}</Box>
+          {children}
         </body>
       </html>
     </ProviderRedux>

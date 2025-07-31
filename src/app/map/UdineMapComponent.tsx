@@ -30,7 +30,7 @@ export default function UdineMapComponent() {
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>
-            <MapContainer center={UDINE_POSITION} zoom={13} style={{ height: "100%", width: "100%" }}>
+            <MapContainer center={UDINE_POSITION} zoom={13} style={{ height: "calc(100% - 65px)", width: "100%" }}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
