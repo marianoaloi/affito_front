@@ -134,6 +134,18 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
 
   return (
     <>
+      {errorMSG ?
+        <Alert severity='error' onClose={() => {dispatch(clearAffitoError()) }} >
+          <AlertTitle>Error</AlertTitle>
+          {errorMSG}
+        </Alert>
+        : ''}
+      {errorTable ?
+        <Alert severity='error' onClose={() => {setError(undefined) }} >
+          <AlertTitle>Error</AlertTitle>
+          {errorTable}
+        </Alert>
+        : ''}
       <Box sx={{ height: '100%', width: '100%' }}>
         <DataGrid
           rows={rows}
@@ -147,7 +159,7 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 50,
+                pageSize: 10,
               },
             },
           }}
@@ -156,18 +168,6 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
           disableRowSelectionOnClick
         />
       </Box>
-      {errorMSG ?
-        <Alert severity='error' onClose={() => {dispatch(clearAffitoError()) }} >
-          <AlertTitle>Error</AlertTitle>
-          {errorMSG}
-        </Alert>
-        : ''}
-      {errorTable ?
-        <Alert severity='error' onClose={() => {setError(undefined) }} >
-          <AlertTitle>Error</AlertTitle>
-          {errorTable}
-        </Alert>
-        : ''}
     </>
   );
 };

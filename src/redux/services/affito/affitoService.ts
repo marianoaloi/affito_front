@@ -1,7 +1,7 @@
 import { AffitoEntity } from "@/app/entity/AffitoEntity";
 import { FilterAffito } from "../filter/filterTypes";
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://us-central1-affitiudine.cloudfunctions.net/api' : 'http://localhost:5000';
+const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://us-central1-affitiudine.cloudfunctions.net/api' : 'http://localhost:5088';
 // 'https://us-central1-affitiudine.cloudfunctions.net/api';
 console.log(process.env.NODE_ENV)
 
@@ -17,7 +17,14 @@ function fetchRetry(url:string, delay : number, tries : number, fetchOptions = {
         }
         return wait(delay).then(() => fetchRetry(url, delay, triesLeft, fetchOptions));
     }
-    return fetch(url,fetchOptions).catch(onError);
+
+    const errorIn404 = (response: Response): Response => {
+        if (response.status === 404) {  
+            throw new Error(`404 Not Found: ${url}`);
+        }
+        return response;
+    }
+    return fetch(url,fetchOptions).then(errorIn404).catch(onError);
 }
 
 const getAffiti =

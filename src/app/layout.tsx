@@ -9,6 +9,7 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import React, { useState } from "react";
 import MenuAffito from "./menu/menu";
 import './firebaseConfig'
+import { AuthProviderTAG } from "./menu/AuthContext";
 import AuthProvider from "./menu/authProvider";
 
 const geistSans = Geist({
@@ -44,7 +45,8 @@ export default function RootLayout({
   
 
   return (
-    
+    <AuthProviderTAG>
+      
     <ProviderRedux>
       <html lang="en">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
@@ -72,5 +74,6 @@ export default function RootLayout({
         </body>
       </html>
     </ProviderRedux>
+    </AuthProviderTAG>
   );
 }

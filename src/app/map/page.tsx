@@ -11,7 +11,7 @@ export default function UdineMapPage() {
       const dispatch = useDispatch();
       const filter = useSelector(getFilter)
       useEffect(() => {
-          dispatch(fetchAffito(filter));
+          dispatch(fetchAffito( filter));
     }, [dispatch, filter]);
   const isLoading = useSelector(state => state.affiti.loading === 'pending'); 
       return isLoading ? <Loading /> :

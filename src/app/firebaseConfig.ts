@@ -17,4 +17,6 @@ const appFirebase = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 // Initialize Firebase Authentication and get a reference to the service
 const authFirebase = getAuth(appFirebase);
 
-export { appFirebase, authFirebase, GoogleAuthProvider, signInWithPopup, signOut };
+
+export const googleProvider = new GoogleAuthProvider();
+export { appFirebase, authFirebase,  signInWithPopup, signOut };
