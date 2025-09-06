@@ -1,39 +1,24 @@
 "use client"
 import React, { useState } from 'react';
 import { AffitoEntity, Feature } from '../entity/AffitoEntity';
-import { Alert, AlertTitle, Box, IconButton, Stack, Tooltip } from '@mui/material';
+import { Alert, AlertTitle, Box } from '@mui/material';
 
-import { CheckCircleSharp, HourglassEmptySharp, CancelSharp } from '@mui/icons-material';
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { clearAffitoError, updateAffitoState } from '@/redux/services/affito/affitoTrunk';
+import { clearAffitoError } from '@/redux/services/affito/affitoTrunk';
 import { getErrorAffito, useDispatch, useSelector } from '@/redux';
-import { getToken } from '@/redux/services/auth/authSlice';
 import { AffitiPageProps } from '../entity/AffitiPageProps';
+import ChoiceState from '../component/ChoiceState';
 
 
-type AffitoState = 1 | 2 | 0 | undefined;
 
 const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   const coluns = new Set<string>();
   const dispatch = useDispatch();
-  const token = useSelector(getToken);
   const errorMSG = useSelector(getErrorAffito)
   const [errorTable,setError] = useState<string | undefined>(undefined);
 
-  const handleStateChange = async (newState: AffitoState, realEstateId: number) => {
-    try {
-
-      if (newState !== undefined && token !== undefined) {
-        dispatch(updateAffitoState({ realEstateId, newState, token }));
-      } else {
-        setError("Token empty")
-      }
-    } catch (err) {
-      // Optionally handle error
-      setError('Failed to update state:'+(err instanceof Error ? err.message : 'Unknown error'));
-    }
-  };
+ 
 
   affiti
     .map((affito: AffitoEntity) => affito.realEstate.properties[0].featureList
@@ -65,39 +50,7 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
     { field: 'price', headerName: 'Price', width: 70 },
     {
       field: 'command', headerName: 'Command', width: 200, filterable: false,
-      renderCell: (params) => {
-        return (
-          <Stack direction="row" spacing={1} alignItems="center">
-            <Tooltip title="Approve">
-              <IconButton
-                color={params.row.stateMaloi === 1 ? 'success' : 'default'}
-                onClick={() => handleStateChange(1, params.row.id)}
-                aria-label="Approve"
-              >
-                <CheckCircleSharp />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Wait">
-              <IconButton
-                color={params.row.stateMaloi === 2 ? 'warning' : 'default'}
-                onClick={() => handleStateChange(2, params.row.id)}
-                aria-label="Wait"
-              >
-                <HourglassEmptySharp />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Deny">
-              <IconButton
-                color={params.row.stateMaloi === 0 ? 'error' : 'default'}
-                onClick={() => handleStateChange(0, params.row.id)}
-                aria-label="Deny"
-              >
-                <CancelSharp />
-              </IconButton>
-            </Tooltip>
-          </Stack>
-        )
-      }
+      renderCell: (params) => <ChoiceState stateMaloi={params.row.stateMaloi} id={params.row.id} />
     },
   ]
 

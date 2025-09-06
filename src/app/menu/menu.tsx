@@ -47,6 +47,13 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
           onChange={e => handleChange('floor', e.target.value ? Number(e.target.value) : undefined)}
           size="small"
         />
+        <TextField
+          label="Agent name"
+          type="text"
+          value={filter.agentName || ''}
+          onChange={e => handleChange('agentName', e.target.value || undefined)}
+          size="small"
+        />
         <FormControl size="small">
           <InputLabel id="elevator-label">Elevator</InputLabel>
           <Select

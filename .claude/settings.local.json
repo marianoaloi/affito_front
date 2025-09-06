@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:react-leaflet.js.org)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

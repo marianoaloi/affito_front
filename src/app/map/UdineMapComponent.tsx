@@ -7,6 +7,7 @@ import { Photo, Photos } from "./UdineMapComponent.styled";
 import { selectAllAffito, useSelector } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import './UdineMapComponent.css'
+import ChoiceState from "../component/ChoiceState";
 
 const UDINE_POSITION: LatLngTuple = [46.0689, 13.2224];
 
@@ -47,7 +48,8 @@ function affitoDataBase(affito: AffitoEntity): ReactNode {
                     >
                         <h2>{affito.realEstate.price.formattedValue}</h2>
                     </a>
-                    <p>{affito.realEstate.title}</p>
+                    <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
+                    <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {propt.featureList.find(x => x.type === 'elevator')?.compactLabel || '**'}]</p>
                     <Photos>
                         {propt.multimedia.photos.slice(0, 9).map((photo, index) => (
                             <Photo key={index} src={photo.urls.small} alt={`Photo ${index + 1}`} />
@@ -58,6 +60,7 @@ function affitoDataBase(affito: AffitoEntity): ReactNode {
         </Marker>
     );
 }
+
 
 export default function UdineMapComponent() {
 
