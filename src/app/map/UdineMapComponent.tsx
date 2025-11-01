@@ -1,15 +1,41 @@
 "use client";
 import { ReactNode, useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import type { LatLngTuple } from "leaflet";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import L, { icon } from "leaflet";
-import { Photo, Photos } from "./UdineMapComponent.styled";
-import { selectAllAffito, useSelector } from "@/redux";
+import { MarkerPopup, Photo, Photos } from "./UdineMapComponent.styled";
+import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import './UdineMapComponent.css'
 import ChoiceState from "../component/ChoiceState";
+import { defaultMapStateExport, triesteMapStateExport } from "@/redux/services/map/mapSlice";
 
-const UDINE_POSITION: LatLngTuple = [46.0689, 13.2224];
+
+function MapEventHandler() {
+    const dispatch = useDispatch();
+
+    const map = useMapEvents({
+        moveend: () => {
+            const center = map.getCenter();
+            const zoom = map.getZoom();
+            dispatch(mapActions.setMapPosition({
+                latitude: center.lat,
+                longitude: center.lng,
+                zoom: zoom
+            }));
+        },
+        zoomend: () => {
+            const center = map.getCenter();
+            const zoom = map.getZoom();
+            dispatch(mapActions.setMapPosition({
+                latitude: center.lat,
+                longitude: center.lng,
+                zoom: zoom
+            }));
+        }
+    });
+
+    return null;
+}
 
 
 function affitoDataBase(affito: AffitoEntity): ReactNode {
@@ -20,22 +46,22 @@ function affitoDataBase(affito: AffitoEntity): ReactNode {
             position={[latitude, longitude]}
             icon={icon({
                 // html: `<span class="spanMark" style="${styleLocation(affito)}" >${affito.realEstate.price.value}</span>`,
-                iconUrl: 
-                
-                affito.stateMaloi != undefined ?
-        (
-            affito.stateMaloi === 0 ? "/marker-icon-deny.png" :
-                affito.stateMaloi === 1 ? "/marker-icon-approve.png" :
-                    "/marker-icon-wait.png") :
-        "/marker-icon.png"
-                
+                iconUrl:
+
+                    affito.stateMaloi != undefined ?
+                        (
+                            affito.stateMaloi === 0 ? "/marker-icon-deny.png" :
+                                affito.stateMaloi === 1 ? "/marker-icon-approve.png" :
+                                    "/marker-icon-wait.png") :
+                        "/marker-icon.png"
+
                 ,
                 // className: "iconMark"
-                            shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
+                shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
             })}
         >
             <Popup>
@@ -65,8 +91,12 @@ function affitoDataBase(affito: AffitoEntity): ReactNode {
 export default function UdineMapComponent() {
 
 
+    const dispatch = useDispatch();
+
     const affiti = useSelector(selectAllAffito);
-    const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([])
+    const mapState = useSelector(selectMapPosition);
+    const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([]);
+
     useEffect(() => {
         const affitiAux = affiti.map(affitoDataBase);
         const meIcon = L.divIcon(
@@ -111,11 +141,29 @@ export default function UdineMapComponent() {
     }, []);
 
 
+    const changeMap = (newMapState: { latitude: number; longitude: number; zoom: number }) => {
+        dispatch(mapActions.setMapPosition({
+            latitude: newMapState.latitude,
+            longitude: newMapState.longitude,
+            zoom: newMapState.zoom
+        }));
 
+
+    }
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>
-            <MapContainer center={UDINE_POSITION} zoom={13} style={{ height: "calc(100% - 65px)", width: "100%" }}>
+            <MarkerPopup>
+                <div><strong>Lat:</strong> {mapState.latitude?.toFixed(6)}</div>
+                <div><strong>Lng:</strong> {mapState.longitude?.toFixed(6)}</div>
+                <div><strong>Zoom:</strong> {mapState.zoom}</div>
+                <div>
+                    <span onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
+                    <span onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
+                </div>
+            </MarkerPopup>
+            <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>
+                <MapEventHandler />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

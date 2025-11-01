@@ -89,6 +89,19 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
             <SelectItem value="0">Denied</SelectItem>
           </Select>
         </FormControl>
+        <FormControl size="small">
+          <InputLabel id="province-label">Province</InputLabel>
+          <Select
+            labelId="province-label"
+            value={filter.province || ''}
+            label="Province"
+            onChange={e => handleChange('province', e.target.value || undefined)}
+          >
+            <SelectItem value="">Any</SelectItem>
+            <SelectItem value="Udine">Udine</SelectItem>
+            <SelectItem value="Trieste">Trieste</SelectItem>
+          </Select>
+        </FormControl>
       </Box>
     </Menu>
   );

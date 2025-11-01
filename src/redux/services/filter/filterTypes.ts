@@ -7,5 +7,6 @@ export interface FilterAffito {
   elevator?: "Sì" | "No" | "empty" | undefined;
   floor?: number;
   agentName?: string;
+  province?: "Udine" |  "Trieste" |  undefined;
 
 } 
