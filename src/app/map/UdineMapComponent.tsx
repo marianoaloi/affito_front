@@ -1,6 +1,6 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
+import { ReactNode, useEffect, useState, useRef } from "react";
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import L, { icon } from "leaflet";
 import { MarkerPopup, Photo, Photos } from "./UdineMapComponent.styled";
 import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition } from "@/redux";
@@ -33,6 +33,16 @@ function MapEventHandler() {
             }));
         }
     });
+
+    return null;
+}
+
+function MapPositionUpdater({ mapRef }: { mapRef: React.MutableRefObject<L.Map | null> }) {
+    const map = useMap();
+
+    useEffect(() => {
+        mapRef.current = map;
+    }, [map, mapRef]);
 
     return null;
 }
@@ -92,6 +102,7 @@ export default function UdineMapComponent() {
 
 
     const dispatch = useDispatch();
+    const mapRef = useRef<L.Map | null>(null);
 
     const affiti = useSelector(selectAllAffito);
     const mapState = useSelector(selectMapPosition);
@@ -148,7 +159,10 @@ export default function UdineMapComponent() {
             zoom: newMapState.zoom
         }));
 
-
+        // Actually move the map to the new position
+        if (mapRef.current) {
+            mapRef.current.setView([newMapState.latitude, newMapState.longitude], newMapState.zoom);
+        }
     }
 
     return (
@@ -164,6 +178,7 @@ export default function UdineMapComponent() {
             </MarkerPopup>
             <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>
                 <MapEventHandler />
+                <MapPositionUpdater mapRef={mapRef} />
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
