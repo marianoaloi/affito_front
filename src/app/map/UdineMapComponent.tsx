@@ -76,6 +76,13 @@ function affitoDataBase(affito: AffitoEntity): ReactNode {
         >
             <Popup>
                 <div>
+                    <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
+                    <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {propt.featureList.find(x => x.type === 'elevator')?.compactLabel || '**'}]</p>
+                    <Photos>
+                        {propt.multimedia.photos.slice(0, 9).map((photo, index) => (
+                            <Photo key={index} src={photo.urls.small} alt={`Photo ${index + 1}`} />
+                        ))}
+                    </Photos>
                     <a
                         href={`https://www.immobiliare.it/annunci/${affito._id}`}
                         target="_blank"
@@ -84,13 +91,6 @@ function affitoDataBase(affito: AffitoEntity): ReactNode {
                     >
                         <h2>{affito.realEstate.price.formattedValue}</h2>
                     </a>
-                    <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
-                    <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {propt.featureList.find(x => x.type === 'elevator')?.compactLabel || '**'}]</p>
-                    <Photos>
-                        {propt.multimedia.photos.slice(0, 9).map((photo, index) => (
-                            <Photo key={index} src={photo.urls.small} alt={`Photo ${index + 1}`} />
-                        ))}
-                    </Photos>
                 </div>
             </Popup>
         </Marker>
@@ -171,6 +171,7 @@ export default function UdineMapComponent() {
                 <div><strong>Lat:</strong> {mapState.latitude?.toFixed(6)}</div>
                 <div><strong>Lng:</strong> {mapState.longitude?.toFixed(6)}</div>
                 <div><strong>Zoom:</strong> {mapState.zoom}</div>
+                <div><strong>Qtd:</strong>{affiti.length}</div>
                 <div>
                     <span onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
                     <span onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>

@@ -9,4 +9,6 @@ export interface FilterAffito {
   agentName?: string;
   province?: "Udine" |  "Trieste" |  undefined;
 
+  paginationSize?: number;
+
 } 

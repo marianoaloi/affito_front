@@ -6,7 +6,7 @@ import { Alert, AlertTitle, Box } from '@mui/material';
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { clearAffitoError } from '@/redux/services/affito/affitoTrunk';
-import { getErrorAffito, useDispatch, useSelector } from '@/redux';
+import { FilterAffito, getErrorAffito, getFilter, setFilterAffito, useDispatch, useSelector } from '@/redux';
 import { AffitiPageProps } from '../entity/AffitiPageProps';
 import ChoiceState from '../component/ChoiceState';
 
@@ -16,9 +16,13 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   const coluns = new Set<string>();
   const dispatch = useDispatch();
   const errorMSG = useSelector(getErrorAffito)
-  const [errorTable,setError] = useState<string | undefined>(undefined);
+  const [errorTable, setError] = useState<string | undefined>(undefined);
+  const filter = useSelector(getFilter) as FilterAffito;
 
- 
+  const changePaginationSize = (newPageSize: number) => {
+    dispatch(setFilterAffito({ ...filter, paginationSize: newPageSize }));
+  };
+
 
   affiti
     .map((affito: AffitoEntity) => affito.realEstate.properties[0].featureList
@@ -88,13 +92,13 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   return (
     <>
       {errorMSG ?
-        <Alert severity='error' onClose={() => {dispatch(clearAffitoError()) }} >
+        <Alert severity='error' onClose={() => { dispatch(clearAffitoError()) }} >
           <AlertTitle>Error</AlertTitle>
           {errorMSG}
         </Alert>
         : ''}
       {errorTable ?
-        <Alert severity='error' onClose={() => {setError(undefined) }} >
+        <Alert severity='error' onClose={() => { setError(undefined) }} >
           <AlertTitle>Error</AlertTitle>
           {errorTable}
         </Alert>
@@ -112,13 +116,14 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
           initialState={{
             pagination: {
               paginationModel: {
-                pageSize: 10,
+                pageSize: filter.paginationSize || 10,
               },
             },
           }}
           pageSizeOptions={[5, 10, 20, 50, 100]}
           checkboxSelection={false}
           disableRowSelectionOnClick
+          onPaginationModelChange={model => changePaginationSize(model.pageSize)}
         />
       </Box>
     </>
