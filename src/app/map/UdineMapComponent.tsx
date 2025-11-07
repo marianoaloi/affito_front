@@ -2,7 +2,7 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import L, { icon } from "leaflet";
-import { MarkerPopup, Photo, Photos } from "./UdineMapComponent.styled";
+import { MarkerPopup, Photo, Photos, PhotoPreview, PhotoPreviewOverlay } from "./UdineMapComponent.styled";
 import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import './UdineMapComponent.css'
@@ -48,7 +48,11 @@ function MapPositionUpdater({ mapRef }: { mapRef: React.MutableRefObject<L.Map |
 }
 
 
-function affitoDataBase(affito: AffitoEntity): ReactNode {
+function affitoDataBase(
+    affito: AffitoEntity,
+    onMouseEnter: (photoUrl: string, event: React.MouseEvent<HTMLImageElement>) => void,
+    onMouseLeave: () => void
+): ReactNode {
     const propt = affito.realEstate.properties[0];
     const { latitude, longitude } = propt.location;
     return (
@@ -79,9 +83,18 @@ function affitoDataBase(affito: AffitoEntity): ReactNode {
                     <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
                     <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {propt.featureList.find(x => x.type === 'elevator')?.compactLabel || '**'}]</p>
                     <Photos>
-                        {propt.multimedia.photos.slice(0, 9).map((photo, index) => (
-                            <Photo key={index} src={photo.urls.small} alt={`Photo ${index + 1}`} />
-                        ))}
+                        {propt.multimedia.photos.slice(0, 9).map((photo, index) => {
+                            const largeUrl = photo.urls.xxl || photo.urls.large || photo.urls.medium || photo.urls.small;
+                            return (
+                                <Photo
+                                    key={index}
+                                    src={photo.urls.small}
+                                    alt={`Photo ${index + 1}`}
+                                    onMouseEnter={(e) => onMouseEnter(largeUrl, e)}
+                                    onMouseLeave={onMouseLeave}
+                                />
+                            );
+                        })}
                     </Photos>
                     <a
                         href={`https://www.immobiliare.it/annunci/${affito._id}`}
@@ -107,9 +120,23 @@ export default function UdineMapComponent() {
     const affiti = useSelector(selectAllAffito);
     const mapState = useSelector(selectMapPosition);
     const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([]);
+    const [hoveredPhoto, setHoveredPhoto] = useState<{ url: string; x: number; y: number } | null>(null);
+
+    const handleMouseEnter = (photoUrl: string, event: React.MouseEvent<HTMLImageElement>) => {
+        const rect = event.currentTarget.getBoundingClientRect();
+        setHoveredPhoto({
+            url: photoUrl,
+            x: rect.right + 10,
+            y: rect.top
+        });
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredPhoto(null);
+    };
 
     useEffect(() => {
-        const affitiAux = affiti.map(affitoDataBase);
+        const affitiAux = affiti.map((affito) => affitoDataBase(affito, handleMouseEnter, handleMouseLeave));
         const meIcon = L.divIcon(
             {
                 html: '<i class="fas fa-map-marker-alt" style="    font-size: 2em;    margin-top: -0.6em;    margin-left: -0.6em;    position: absolute;">🫵</i>',
@@ -148,6 +175,7 @@ export default function UdineMapComponent() {
         //     popupAnchor: [1, -34],
         //     shadowSize: [41, 41]
         // });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
 
     }, []);
 
@@ -167,6 +195,16 @@ export default function UdineMapComponent() {
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>
+            {hoveredPhoto && (
+                <PhotoPreviewOverlay
+                    style={{
+                        left: `${hoveredPhoto.x}px`,
+                        top: `${hoveredPhoto.y}px`,
+                    }}
+                >
+                    <PhotoPreview src={hoveredPhoto.url} alt="Enlarged preview" />
+                </PhotoPreviewOverlay>
+            )}
             <MarkerPopup>
                 <div><strong>Lat:</strong> {mapState.latitude?.toFixed(6)}</div>
                 <div><strong>Lng:</strong> {mapState.longitude?.toFixed(6)}</div>
