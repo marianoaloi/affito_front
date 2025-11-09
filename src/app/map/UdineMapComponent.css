@@ -9,3 +9,8 @@
 .spanMark{
     padding: 5px 2px 2px 5px;
 }
+
+.borderSelected {
+    border: 2px solid #ff0000;
+    border-radius: 5px;
+}

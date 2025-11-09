@@ -204,23 +204,21 @@ export default function UdineMapComponent() {
                 <div><strong>Zoom:</strong> {mapState.zoom}</div> */}
                 <QtdMap>
                     <strong>Elevator:</strong>
-
-                    
-            <span onClick={() => changeFilterStatus("elevator",undefined)}>{affiti.length}</span>
-            <span onClick={() => changeFilterStatus("elevator","No")}>{elevatorCount.filter(a => a == "No").length}</span>
-            <span onClick={() => changeFilterStatus("elevator","Sì")}>{elevatorCount.filter(a => a == "Sì").length}</span>
-            <span onClick={() => changeFilterStatus("elevator","empty")}>{elevatorCount.filter(a => ! a ).length}</span>
+                    <span  className={filter.elevator == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", undefined)}>{affiti.length}</span>
+                    <span  className={filter.elevator == "No" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "No")}>{elevatorCount.filter(a => a == "No").length}</span>
+                    <span  className={filter.elevator == "Sì" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "Sì")}>{elevatorCount.filter(a => a == "Sì").length}</span>
+                    <span  className={filter.elevator == "empty" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "empty")}>{elevatorCount.filter(a => !a).length}</span>
                 </QtdMap>
                 <QtdMap>
                     <strong>Qtd:</strong>
-                    <span onClick={() => changeFilterStatus("stateMaloi", undefined)}>{affiti.length}</span>
-                    <span onClick={() => changeFilterStatus("stateMaloi", 0)}>{affiti.filter(a => a.stateMaloi == 0).length}</span>
-                    <span onClick={() => changeFilterStatus("stateMaloi", 1)}>{affiti.filter(a => a.stateMaloi == 1).length}</span>
-                    <span onClick={() => changeFilterStatus("stateMaloi", -1)}>{affiti.filter(a => undefined == a.stateMaloi).length}</span>
+                    <span  className={filter.stateMaloi == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", undefined)}>{affiti.length}</span>
+                    <span  className={filter.stateMaloi == 0 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 0)}>{affiti.filter(a => a.stateMaloi == 0).length}</span>
+                    <span  className={filter.stateMaloi == 1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 1)}>{affiti.filter(a => a.stateMaloi == 1).length}</span>
+                    <span  className={filter.stateMaloi == -1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", -1)}>{affiti.filter(a => undefined == a.stateMaloi).length}</span>
                 </QtdMap>
                 <LuogoMap>
-                    <span onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
-                    <span onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
+                    <span  className={filter.province == 'Udine' ? "borderSelected" : ""} onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
+                    <span  className={filter.province == 'Trieste' ? "borderSelected" : ""} onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
                 </LuogoMap>
             </MarkerPopup>
             <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>
