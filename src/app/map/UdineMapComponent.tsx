@@ -2,12 +2,13 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import L, { icon } from "leaflet";
-import { MarkerPopup, Photo, Photos, PhotoPreview, PhotoPreviewOverlay } from "./UdineMapComponent.styled";
-import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition } from "@/redux";
+import { MarkerPopup, Photo, Photos, PhotoPreview, PhotoPreviewOverlay, LuogoMap, QtdMap } from "./UdineMapComponent.styled";
+import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition, getFilter, FilterAffito, setFilterAffito } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import './UdineMapComponent.css'
 import ChoiceState from "../component/ChoiceState";
 import { defaultMapStateExport, triesteMapStateExport } from "@/redux/services/map/mapSlice";
+import PopupContent from "./PopupMapComponent";
 
 
 function MapEventHandler() {
@@ -48,6 +49,7 @@ function MapPositionUpdater({ mapRef }: { mapRef: React.MutableRefObject<L.Map |
 }
 
 
+
 function affitoDataBase(
     affito: AffitoEntity,
     onMouseEnter: (photoUrl: string, event: React.MouseEvent<HTMLImageElement>) => void,
@@ -79,32 +81,11 @@ function affitoDataBase(
             })}
         >
             <Popup>
-                <div>
-                    <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
-                    <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {propt.featureList.find(x => x.type === 'elevator')?.compactLabel || '**'}]</p>
-                    <Photos>
-                        {propt.multimedia.photos.slice(0, 9).map((photo, index) => {
-                            const largeUrl = photo.urls.xxl || photo.urls.large || photo.urls.medium || photo.urls.small;
-                            return (
-                                <Photo
-                                    key={index}
-                                    src={photo.urls.small}
-                                    alt={`Photo ${index + 1}`}
-                                    onMouseEnter={(e) => onMouseEnter(largeUrl, e)}
-                                    onMouseLeave={onMouseLeave}
-                                />
-                            );
-                        })}
-                    </Photos>
-                    <a
-                        href={`https://www.immobiliare.it/annunci/${affito._id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ color: '#1976d2', textDecoration: 'underline' }}
-                    >
-                        <h2>{affito.realEstate.price.formattedValue}</h2>
-                    </a>
-                </div>
+                <PopupContent
+                    affito={affito}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                />
             </Popup>
         </Marker>
     );
@@ -119,6 +100,7 @@ export default function UdineMapComponent() {
 
     const affiti = useSelector(selectAllAffito);
     const mapState = useSelector(selectMapPosition);
+    const filter = useSelector(getFilter) as FilterAffito;
     const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([]);
     const [hoveredPhoto, setHoveredPhoto] = useState<{ url: string; x: number; y: number } | null>(null);
 
@@ -180,18 +162,30 @@ export default function UdineMapComponent() {
     }, []);
 
 
-    const changeMap = (newMapState: { latitude: number; longitude: number; zoom: number }) => {
+    const changeMap = (newMapState: { latitude: number; longitude: number; zoom: number; local: string }) => {
         dispatch(mapActions.setMapPosition({
             latitude: newMapState.latitude,
             longitude: newMapState.longitude,
             zoom: newMapState.zoom
         }));
 
+        dispatch(setFilterAffito({ ...filter, "province": newMapState.local as "Udine" | "Trieste" | undefined }));
+
         // Actually move the map to the new position
         if (mapRef.current) {
             mapRef.current.setView([newMapState.latitude, newMapState.longitude], newMapState.zoom);
         }
     }
+
+    function changeFilterStatus(field: string, value: 0 | 1 | 2 | -1 | undefined | string): void {
+        // Accept undefined to indicate "no state filter" (show all)
+        // Placeholder implementation — replace with real filter logic as needed
+        // For now just log the requested filter value
+        // eslint-disable-next-line no-console
+        dispatch(setFilterAffito({ ...filter, [field]: value }));
+    }
+
+    let elevatorCount = affiti.map(a => a.realEstate.properties[0].featureList.find(f => f.type == 'elevator')?.compactLabel)
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>
@@ -206,14 +200,29 @@ export default function UdineMapComponent() {
                 </PhotoPreviewOverlay>
             )}
             <MarkerPopup>
-                <div><strong>Lat:</strong> {mapState.latitude?.toFixed(6)}</div>
+                {/* <div><strong>Lat:</strong> {mapState.latitude?.toFixed(6)}</div>
                 <div><strong>Lng:</strong> {mapState.longitude?.toFixed(6)}</div>
-                <div><strong>Zoom:</strong> {mapState.zoom}</div>
-                <div><strong>Qtd:</strong>{affiti.length}</div>
-                <div>
+                <div><strong>Zoom:</strong> {mapState.zoom}</div> */}
+                <QtdMap>
+                    <strong>Elevator:</strong>
+
+                    
+            <span onClick={() => changeFilterStatus("elevator",undefined)}>{affiti.length}</span>
+            <span onClick={() => changeFilterStatus("elevator","No")}>{elevatorCount.filter(a => a == "No").length}</span>
+            <span onClick={() => changeFilterStatus("elevator","Sì")}>{elevatorCount.filter(a => a == "Sì").length}</span>
+            <span onClick={() => changeFilterStatus("elevator","empty")}>{elevatorCount.filter(a => ! a ).length}</span>
+                </QtdMap>
+                <QtdMap>
+                    <strong>Qtd:</strong>
+                    <span onClick={() => changeFilterStatus("stateMaloi", undefined)}>{affiti.length}</span>
+                    <span onClick={() => changeFilterStatus("stateMaloi", 0)}>{affiti.filter(a => a.stateMaloi == 0).length}</span>
+                    <span onClick={() => changeFilterStatus("stateMaloi", 1)}>{affiti.filter(a => a.stateMaloi == 1).length}</span>
+                    <span onClick={() => changeFilterStatus("stateMaloi", -1)}>{affiti.filter(a => undefined == a.stateMaloi).length}</span>
+                </QtdMap>
+                <LuogoMap>
                     <span onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
                     <span onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
-                </div>
+                </LuogoMap>
             </MarkerPopup>
             <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>
                 <MapEventHandler />

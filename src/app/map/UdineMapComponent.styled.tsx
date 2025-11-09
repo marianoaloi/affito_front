@@ -23,6 +23,44 @@ export const Photo = styled.img`
     }
     `
 
+export const QtdMap = styled.div`
+    display: flex; 
+    gap: 8px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    span {
+        padding: 2px 6px;
+        border-radius: 4px;
+        background-color: #1976d2;
+        color: white; 
+        &:nth-of-type(1) {
+            background-color: #000000;  
+        }
+        &:nth-of-type(2) {
+            background-color: #bd2f2f;
+        }
+        &:nth-of-type(3) {
+            background-color: green;
+        }
+    }
+`
+
+export const LuogoMap = styled.div`
+    margin-top: 5px;
+    display: flex;
+    gap: 10px;
+    span {
+        cursor: pointer;  
+        padding: 2px 6px;
+        border-radius: 4px;
+        background-color: #1976d2;
+        color: white; 
+        font-size: 12px;
+        &:hover {
+            background-color: #115293;
+        }
+    }
+`
 export const PhotoPreviewOverlay = styled(Box)`
   position: fixed;
   z-index: 10000;

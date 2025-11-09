@@ -5,6 +5,7 @@ interface MapState {
   latitude: number;
   longitude: number;
   zoom: number;
+  local: string;
 }
 
 const CookieName = 'affito_map_state';
@@ -37,12 +38,14 @@ const defaultMapState: MapState = {
   latitude: 46.0689,
   longitude: 13.2224,
   zoom: 13,
+  local: "Udine",
 };
 
 const triesteMapState: MapState = {
   latitude: 45.643837,
   longitude: 13.795002,
   zoom: 13,
+  local: "Trieste",
 };
 
 const initialState: MapState = getMapStateFromCookie() || defaultMapState;
