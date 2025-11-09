@@ -2,11 +2,10 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import L, { icon } from "leaflet";
-import { MarkerPopup, Photo, Photos, PhotoPreview, PhotoPreviewOverlay, LuogoMap, QtdMap } from "./UdineMapComponent.styled";
+import { MarkerPopup, PhotoPreview, PhotoPreviewOverlay, LuogoMap, QtdMap } from "./UdineMapComponent.styled";
 import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition, getFilter, FilterAffito, setFilterAffito } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import './UdineMapComponent.css'
-import ChoiceState from "../component/ChoiceState";
 import { defaultMapStateExport, triesteMapStateExport } from "@/redux/services/map/mapSlice";
 import PopupContent from "./PopupMapComponent";
 
@@ -185,7 +184,7 @@ export default function UdineMapComponent() {
         dispatch(setFilterAffito({ ...filter, [field]: value }));
     }
 
-    let elevatorCount = affiti.map(a => a.realEstate.properties[0].featureList.find(f => f.type == 'elevator')?.compactLabel)
+    const elevatorCount = affiti.map(a => a.realEstate.properties[0].featureList.find(f => f.type == 'elevator')?.compactLabel)
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>

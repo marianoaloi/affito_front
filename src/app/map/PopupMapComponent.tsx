@@ -30,7 +30,7 @@ function PopupContent({
     const goToNextPage = () => {
         setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
     };
-    const openImg = (photoUrl: string, event: React.MouseEvent<HTMLImageElement>): void => {
+    const openImg = (photoUrl: string): void => {
                         open(photoUrl, '_blank');
                     }
     function getPropertie(propertie: string): import("react").ReactNode {
@@ -56,7 +56,7 @@ function PopupContent({
                             alt={`Photo ${startIndex + index + 1}`}
                             onMouseEnter={(e) => onMouseEnter(largeUrl, e)}
                             onMouseLeave={onMouseLeave}
-                            onClick={(e) => openImg(largeUrl, e)}
+                            onClick={(e) => openImg(largeUrl)}
                         />
                     );
                 })}
