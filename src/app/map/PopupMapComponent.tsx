@@ -56,7 +56,7 @@ function PopupContent({
                             alt={`Photo ${startIndex + index + 1}`}
                             onMouseEnter={(e) => onMouseEnter(largeUrl, e)}
                             onMouseLeave={onMouseLeave}
-                            onClick={(e) => openImg(largeUrl)}
+                            onClick={() => openImg(largeUrl)}
                         />
                     );
                 })}
