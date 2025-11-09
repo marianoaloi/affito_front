@@ -14,9 +14,37 @@
         {
             "type": "chrome",
             "request": "launch",
-            "name": "Launch Chrome against localhost",
+            "name": "chrome",
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}"
+        },
+        {
+            "name": "front Debugging",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "env": {
+                "NODE_ENV": "development",
+            }
+        },
+        {
+            "name": "back Debugging",
+            "type": "node",
+            "request": "launch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": ["run", "dev"],
+            "env": {
+                "NODE_ENV": "development",
+            },
+            "cwd": "C:/Users/maria/prj/JS/backaffitofirebase/functions"
+        }
+    ]
+    ,"compounds": [
+        {
+            "name": "Full Stack Debugging",
+            "configurations": ["front Debugging", "back Debugging", "chrome"],
+            "stopAll": true
         }
     ]
 }

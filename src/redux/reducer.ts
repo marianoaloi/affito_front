@@ -1,8 +1,7 @@
-import { affitoReducer, filterReducer } from "./services";
-import { authReduce } from "./services/auth/authSlice";
+import { affitoReducer, filterReducer, mapReducer } from "./services";
 
 export const reducer = {
     affiti: affitoReducer,
     filter: filterReducer,
-    auth: authReduce,
+    map: mapReducer,
 }

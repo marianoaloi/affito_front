@@ -47,6 +47,13 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
           onChange={e => handleChange('floor', e.target.value ? Number(e.target.value) : undefined)}
           size="small"
         />
+        <TextField
+          label="Agent name"
+          type="text"
+          value={filter.agentName || ''}
+          onChange={e => handleChange('agentName', e.target.value || undefined)}
+          size="small"
+        />
         <FormControl size="small">
           <InputLabel id="elevator-label">Elevator</InputLabel>
           <Select
@@ -80,6 +87,19 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
             <SelectItem value="1">Approved</SelectItem>
             <SelectItem value="2">Waiting</SelectItem>
             <SelectItem value="0">Denied</SelectItem>
+          </Select>
+        </FormControl>
+        <FormControl size="small">
+          <InputLabel id="province-label">Province</InputLabel>
+          <Select
+            labelId="province-label"
+            value={filter.province || ''}
+            label="Province"
+            onChange={e => handleChange('province', e.target.value || undefined)}
+          >
+            <SelectItem value="">Any</SelectItem>
+            <SelectItem value="Udine">Udine</SelectItem>
+            <SelectItem value="Trieste">Trieste</SelectItem>
           </Select>
         </FormControl>
       </Box>

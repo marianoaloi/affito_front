@@ -76,11 +76,21 @@ export interface Supervisor {
   imageUrl: string;
 }
 
+export interface LoweredPrice {
+  originalPrice: string,
+  currentPrice: string,
+  discountPercentage: string,
+  priceDecreasedBy: string,
+  passedDays: number;
+  date: string,
+  typologiesCount: number;
+}
 export interface PriceInfo {
   visible: boolean;
   value: number;
   formattedValue: string;
   priceRange: string;
+  loweredPrice: LoweredPrice;
 }
 
 export interface Property {
