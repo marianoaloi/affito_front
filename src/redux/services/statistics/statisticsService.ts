@@ -36,7 +36,7 @@ const getStatistics =
             throw new Error('Failed to fetch statistics data');
         }
         const data = await response.json();
-        return data;
+        return data.data;
     }
 
 export default getStatistics;
