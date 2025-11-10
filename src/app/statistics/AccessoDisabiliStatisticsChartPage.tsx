@@ -1,7 +1,7 @@
 "use client";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useMemo } from "react";
-import { StyledContainer, StyledTitle, StyledSubtitle, StyledChartBox, BarRowComponent } from "./StatisticsChartPage.styled";
+import { StyledContainer, StyledTitle, StyledSubtitle, StyledChartBox } from "./StatisticsChartPage.styled";
 import { StatisticsChartPageProps } from "./StatisticsCharPageProps";
 
 interface DisabiliStats {
