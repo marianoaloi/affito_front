@@ -45,6 +45,11 @@
             "name": "Full Stack Debugging",
             "configurations": ["front Debugging", "back Debugging", "chrome"],
             "stopAll": true
+        },
+        {
+            "name": "Front + Back Debugging",
+            "configurations": ["front Debugging", "back Debugging"],
+            "stopAll": true
         }
     ]
 }
