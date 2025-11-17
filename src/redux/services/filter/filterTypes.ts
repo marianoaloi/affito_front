@@ -8,7 +8,7 @@ export interface FilterAffito {
   floor?: number;
   agentName?: string;
   province?: "Udine" |  "Trieste" |  undefined;
-  accessoDisabili?: boolean | undefined;
+  accessoDisabili?: number | undefined;
 
   paginationSize?: number;
 

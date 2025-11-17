@@ -3,78 +3,243 @@
 export interface AffitoEntity {
   _id: number;
   realEstate: RealEstate;
-  seo: Seo;
-  idGeoHash: string;
-  mLastUpdate: number;
+  // seo: Seo;
+  // idGeoHash: string;
+  // mLastUpdate: number;
   stateMaloi: number;
 }
 
 export interface RealEstate {
-  visibility: string;
-  dataType: string;
-  id: number;
-  uuid: string;
-  advertiser: Advertiser;
-  contract: string;
-  isNew: boolean;
-  luxury: boolean;
+  // visibility: string;
+  // dataType: string;
+  // id: number;
+  // uuid: string;
+  // advertiser: Advertiser;
+  // contract: string;
+  // isNew: boolean;
+  // luxury: boolean;
   price: PriceInfo;
-  properties: Property[];
+  properties: Property;
   title: string;
-  type: string;
+  // type: string;
+  // typology: Typology;
+  // hasMainProperty: boolean;
+  // isProjectLike: boolean;
+  // isMosaic: boolean;
+}
+
+
+
+interface Property {
+  showSurfaceConstitution: boolean;
+  adLinks: any[];
+  primaryFeatures: PrimaryFeature[];
+  ga4features: string[];
+  id: string;
+  elevator: boolean;
+  availability: string;
+  bathrooms: string;
+  buildingYear: number;
+  cadastrals: any[];
+  caption: string;
+  category: Category;
+  conditionId: number;
+  ga4Condition: string;
+  condition: string;
+  costs: Costs;
+  description: string;
+  defaultDescription: string;
+  energy: Energy;
+  ga4Heating: string;
+  features: string[];
+  floor: Floor;
+  floors: string;
+  garage: string;
+  income: boolean;
+  location: Location;
+  multimedia: Multimedia;
+  photo: Photo;
+  price: Price;
+  reference: Reference;
+  lastUpdate: string;
+  rent: Rent;
+  rooms: string;
+  kitchenStatus: string;
+  roomsValue: string;
+  bedRoomsNumber: string;
+  surface: string;
+  surfaceConstitution: SurfaceConstitution;
+  surfaceValue: string;
   typology: Typology;
-  hasMainProperty: boolean;
-  isProjectLike: boolean;
-  isMosaic: boolean;
+  typologyV2: Typology;
+  typologyValue: string;
+  ga4Garage: string;
+  typologyGA4Translation: string;
+  residentialUnits: null;
+  commercialUnits: null;
+  land: null;
+  mainFeatures: MainFeature[];
 }
 
-export interface Advertiser {
-  agency: Agency;
-  supervisor: Supervisor;
-  hasCallNumbers: boolean;
+interface PrimaryFeature {
+  id: number | null;
+  name: string;
+  value: number | null;
+  isVisible: boolean;
+  codeName: string;
 }
 
-export interface Agency {
+interface Category {
   id: number;
-  type: string;
-  showOnlyAgentPhone: boolean;
-  phones: Phone[];
-  bookableVisit: BookableVisit;
-  isPaid: boolean;
-  label: string;
-  displayName: string;
-  guaranteed: boolean;
-  showAgentPhone: boolean;
-  showLogo: boolean;
-  imageUrls: ImageUrls;
-  agencyUrl: string;
-  showExternalLink: boolean;
+  name: string;
 }
 
-export interface Phone {
-  type: string;
+interface Costs {
+  appliedVat: null;
+  agencyCommission: null;
+  commissionSubject: null;
+  condominiumExpenses: string;
+  heatingExpenses: string;
+  bankGuarantee: null;
+}
+
+interface Energy {
+  zeroEnergyBuilding: boolean;
+  thermalInsulation: null;
+  emission: null;
+  heatingType: string;
+  airConditioning: string;
+  class: EnergyClass;
+  epi: string;
+  epiUm: string;
+}
+
+interface EnergyClass {
+  name: string;
+  color: string;
+}
+
+interface Floor {
+  abbreviation: string;
   value: string;
+  floorOnlyValue: string;
+  ga4FloorValue: string;
 }
 
-export interface BookableVisit {
-  isVisitBookable: boolean;
-  virtualVisitEnabled: boolean;
+interface Location {
+  latitude: number;
+  longitude: number;
+  zoom: number;
+  nation: Nation;
+  region: string;
+  province: string;
+  provinceId: string;
+  city: string;
+  cityId: number;
+  macrozone: string;
+  macrozoneId: number;
+  microzone: string;
+  locality: null;
+  address: string;
+  streetNumber: string;
+  marker: string;
 }
 
-export interface ImageUrls {
+interface Nation {
+  id: string;
+  name: string;
+  keyurl: string;
+}
+
+interface Multimedia {
+  photos: Photo[];
+  videos: any[];
+  floorplans: any[];
+  photoPlan: any[];
+  virtualTours: any[];
+  documents: any[];
+  hasMultimedia: boolean;
+  hasOnlyPhotos: boolean;
+}
+
+interface Photo {
+  id: number;
+  caption: string;
+  urls: PhotoUrls;
+  tag?: PhotoTag;
+}
+
+interface PhotoUrls {
+  thumb: string;
   small: string;
+  medium: string;
   large: string;
+  xxl: string;
 }
 
-export interface Supervisor {
-  type: string;
-  imageGender: string;
-  phones: Phone[];
-  imageType: string;
-  displayName: string;
+interface PhotoTag {
   label: string;
-  imageUrl: string;
+  key: string;
+  category: string;
 }
+
+interface Price {
+  visible: boolean;
+  value: number;
+  formattedValue: string;
+  priceRange: string;
+  pricePerSquareMeter: string;
+}
+
+interface Reference {
+  label: string;
+  code: string;
+}
+
+interface Rent {
+  deposit: string;
+  priceReferenceIndex: null;
+  redemptionRent: null;
+  availableToStudents: boolean;
+}
+
+interface SurfaceConstitution {
+  surfaceConstitutionElements: SurfaceConstitutionElement[];
+  totalMainSurface: string;
+}
+
+interface SurfaceConstitutionElement {
+  constitution: string;
+  constitutionKey: string;
+  surface: string;
+  percentage: number;
+  commercialSurface: string;
+  floor: {
+    value: string;
+    abbreviation: string;
+  };
+  surfaceType: string;
+}
+
+interface Typology {
+  id: number;
+  name: string;
+}
+
+export interface MainFeature {
+  type: string;
+  label: string;
+  compactLabel?: string;
+}
+
+export interface PriceInfo {
+  visible: boolean;
+  value: number;
+  formattedValue: string;
+  priceRange: string;
+  loweredPrice: LoweredPrice;
+}
+
 
 export interface LoweredPrice {
   originalPrice: string,
@@ -85,95 +250,3 @@ export interface LoweredPrice {
   date: string,
   typologiesCount: number;
 }
-export interface PriceInfo {
-  visible: boolean;
-  value: number;
-  formattedValue: string;
-  priceRange: string;
-  loweredPrice: LoweredPrice;
-}
-
-export interface Property {
-  multimedia: Multimedia;
-  bathrooms: string;
-  floor: Floor;
-  ga4Condition: string;
-  price: PriceInfo;
-  rooms: string;
-  surface: string;
-  typology: Typology;
-  typologyGA4Translation: string;
-  ga4features: string[];
-  ga4Heating: string;
-  caption: string;
-  category: Category;
-  photo: Photo;
-  bedRoomsNumber: string;
-  location: Location;
-  featureList: Feature[];
-}
-
-export interface Multimedia {
-  photos: Photo[];
-  virtualTours: any[];
-  hasMultimedia: boolean;
-}
-
-export interface Photo {
-  id: number;
-  caption: string;
-  urls: PhotoUrls;
-}
-
-export interface PhotoUrls {
-  small: string;
-  medium?: string;
-  large?: string;
-  xxl?: string;
-}
-
-export interface Floor {
-  abbreviation: string;
-  value: string;
-  floorOnlyValue: string;
-  ga4FloorValue: string;
-}
-
-export interface Typology {
-  id: number;
-  name: string;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-}
-
-export interface Location {
-  address: string;
-  latitude: number;
-  longitude: number;
-  marker: string;
-  region: string;
-  province: string;
-  macrozone: string;
-  microzone: string;
-  city: string;
-  nation: Nation;
-}
-
-export interface Nation {
-  id: string;
-  name: string;
-}
-
-export interface Feature {
-  type: string;
-  label: string;
-  compactLabel?: string;
-}
-
-export interface Seo {
-  anchor: string;
-  url: string;
-} 

@@ -93,7 +93,7 @@ export default function ProvinceStatisticsChartPage({ affiti }: StatisticsChartP
         const provinceStatsMap: Record<string, ProvinceStats> = {};
 
         affiti.forEach(affito => {
-            const province = affito.realEstate.properties[0]?.location?.province || 'Unknown';
+            const province = affito.realEstate.properties?.location?.province || 'Unknown';
             const state = affito.stateMaloi;
 
             if (!provinceStatsMap[province]) {

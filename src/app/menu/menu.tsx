@@ -106,15 +106,16 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
           <InputLabel id="accessoDisabili-label">Accesso Disabili</InputLabel>
           <Select
             labelId="accessoDisabili-label"
-            value={filter.accessoDisabili === undefined ? '' : filter.accessoDisabili ? 'yes' : 'no'}
+            value={filter.accessoDisabili === undefined ? '' : filter.accessoDisabili }
             label="Accesso Disabili"
             onChange={e => {
               const val = e.target.value;
-              handleChange('accessoDisabili', val === 'yes' );
+              handleChange('accessoDisabili',  val );
             }}
           >
-            <SelectItem value="">Any</SelectItem>
-            <SelectItem value="yes">Yes</SelectItem>
+            <SelectItem value={undefined}>Any</SelectItem>
+            <SelectItem value={1}>Yes</SelectItem>
+            <SelectItem value={0}>No</SelectItem>
           </Select>
         </FormControl>
       </Box>

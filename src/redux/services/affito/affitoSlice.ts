@@ -50,7 +50,7 @@ const affitoSlice = createSlice({
       .addCase(updateAffitoState.fulfilled, (state, action) => {
         state.loading = 'succeeded';
         const { realEstateId, newState } = action.meta.arg;
-        const affito = state.data.find(a => a.realEstate.id === realEstateId);
+        const affito = state.data.find(a => a._id === realEstateId);
         const status = action.payload.success;
         if (affito && status) {
           affito.stateMaloi = newState;

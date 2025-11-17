@@ -1,6 +1,5 @@
 "use client"
 import React, { useState } from 'react';
-import { AffitoEntity, Feature } from '../entity/AffitoEntity';
 import { Alert, AlertTitle, Box } from '@mui/material';
 
 
@@ -9,6 +8,7 @@ import { clearAffitoError } from '@/redux/services/affito/affitoTrunk';
 import { FilterAffito, getErrorAffito, getFilter, setFilterAffito, useDispatch, useSelector } from '@/redux';
 import { AffitiPageProps } from '../entity/AffitiPageProps';
 import ChoiceState from '../component/ChoiceState';
+import { AffitoEntity, MainFeature } from '../entity/AffitoEntity';
 
 
 
@@ -25,8 +25,8 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
 
 
   affiti
-    .map((affito: AffitoEntity) => affito.realEstate.properties[0].featureList
-      .forEach((feature: Feature) => {
+    .map((affito: AffitoEntity) => affito.realEstate.properties.mainFeatures
+      .forEach((feature: MainFeature) => {
         coluns.add(feature.type)
       }))
 
@@ -71,8 +71,8 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
       stateMaloi: affito.stateMaloi, // Add this for the link
     }
     coluns.forEach((colun: string) => {
-      const feature = affito.realEstate.properties[0].featureList
-        .find((feature: Feature) => feature.type === colun);
+      const feature = affito.realEstate.properties.mainFeatures
+        .find((feature: MainFeature) => feature.type === colun);
 
       objAffito[colun] = feature?.compactLabel || feature?.label || ''
     })
@@ -82,8 +82,8 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   affiti
     .forEach((affito: AffitoEntity) => {
       const realestate = affito.realEstate
-      realestate.properties[0].featureList
-        .forEach((feature: Feature) => {
+      realestate.properties.mainFeatures
+        .forEach((feature: MainFeature) => {
           coluns.add(feature.type)
         })
     }

@@ -14,7 +14,7 @@ function PopupContent({
     onMouseLeave: () => void;
 }) {
     const [currentPage, setCurrentPage] = useState(0);
-    const propt = affito.realEstate.properties[0];
+    const propt = affito.realEstate.properties;
     const PHOTOS_PER_PAGE = 9;
     const totalPhotos = propt.multimedia.photos.length;
     const totalPages = Math.ceil(totalPhotos / PHOTOS_PER_PAGE);
@@ -34,7 +34,7 @@ function PopupContent({
                         open(photoUrl, '_blank');
                     }
     function getPropertie(propertie: string): import("react").ReactNode {
-        const choiceProp = propt.featureList.find(x => x.type === propertie)
+        const choiceProp = propt.mainFeatures.find(x => x.type === propertie)
         if(!choiceProp)
             return '**'
         return choiceProp?.compactLabel ||choiceProp?.label || '**'

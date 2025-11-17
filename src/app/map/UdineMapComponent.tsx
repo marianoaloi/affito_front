@@ -54,10 +54,10 @@ function affitoDataBase(
     onMouseEnter: (photoUrl: string, event: React.MouseEvent<HTMLImageElement>) => void,
     onMouseLeave: () => void
 ): ReactNode {
-    const propt = affito.realEstate.properties[0];
+    const propt = affito.realEstate.properties;
     const { latitude, longitude } = propt.location;
     return (
-        <Marker key={affito.realEstate.id}
+        <Marker key={affito._id}
             position={[latitude, longitude]}
             icon={icon({
                 // html: `<span class="spanMark" style="${styleLocation(affito)}" >${affito.realEstate.price.value}</span>`,
@@ -184,7 +184,7 @@ export default function UdineMapComponent() {
         dispatch(setFilterAffito({ ...filter, [field]: value }));
     }
 
-    const elevatorCount = affiti.map(a => a.realEstate.properties[0].featureList.find(f => f.type == 'elevator')?.compactLabel)
+    const elevatorCount = affiti.map(a => a.realEstate.properties.mainFeatures.find(f => f.type == 'elevator')?.compactLabel)
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>

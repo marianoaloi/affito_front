@@ -84,9 +84,10 @@ export default function ElevatorStatisticsChartPage({ affiti }: StatisticsChartP
         const ElevatorStatsMap: Record<string, ElevatorStats> = {};
 
         const elevatorCount = affiti.map(a => {
+            const elevator = a.realEstate.properties.mainFeatures.find(f => f.type == 'elevator')?.compactLabel || 'empty';
             return {
-                elevator: a.realEstate.properties[0].featureList.find(f => f.type == 'elevator')?.compactLabel || 'empty',
-                province: a.realEstate.properties[0].location.province
+                elevator: elevator,
+                province: a.realEstate.properties.location.province
             };
         });
 
