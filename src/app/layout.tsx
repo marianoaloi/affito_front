@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AppBar, Toolbar, IconButton, Typography, Menu, MenuItem } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import React, { useState } from "react";
+import React, { useState, Suspense } from "react";
 import MenuAffito from "./menu/menu";
 import './firebaseConfig'
 import { AuthProviderTAG } from "./menu/AuthContext";
@@ -68,7 +68,9 @@ export default function RootLayout({
                 <MenuItem component={Link} href="/statistics" onClick={handleMenuClose}>Statistics</MenuItem>
               </Menu>
               <AuthProvider />
-              <MenuAffito filterAnchorEl={filterAnchorEl} handleFilterClose={handleFilterClose} />
+              <Suspense fallback={null}>
+                <MenuAffito filterAnchorEl={filterAnchorEl} handleFilterClose={handleFilterClose} />
+              </Suspense>
             </Toolbar>
           </AppBar>
           {children}

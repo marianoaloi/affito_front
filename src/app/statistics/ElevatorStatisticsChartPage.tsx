@@ -84,6 +84,9 @@ export default function ElevatorStatisticsChartPage({ affiti }: StatisticsChartP
         const ElevatorStatsMap: Record<string, ElevatorStats> = {};
 
         const elevatorCount = affiti.map(a => {
+            if (!a.realEstate.properties || !a.realEstate.properties.mainFeatures) {
+                return { elevator: 'niente', province: "niente" };
+            }
             const elevator = a.realEstate.properties.mainFeatures.find(f => f.type == 'elevator')?.compactLabel || 'empty';
             return {
                 elevator: elevator,

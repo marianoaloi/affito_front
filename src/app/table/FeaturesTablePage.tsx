@@ -25,10 +25,9 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
 
 
   affiti
-    .map((affito: AffitoEntity) => affito.realEstate.properties.mainFeatures
-      .forEach((feature: MainFeature) => {
-        coluns.add(feature.type)
-      }))
+    .map((affito: AffitoEntity) => affito.realEstate.properties?.mainFeatures?.map((feature: MainFeature) => feature.type))
+    .forEach((features: string[] | undefined) => features?.map((feature: string) => coluns.add(feature))
+      )
 
   const columns: GridColDef<(typeof rows)[number]>[] = [
     { field: 'id', headerName: 'ID', width: 100 },
