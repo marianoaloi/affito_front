@@ -192,10 +192,10 @@ export default function UdineMapComponent() {
                 <PhotoPreviewOverlay
                     style={{
                         left: `${hoveredPhoto.x}px`,
-                        top: `${hoveredPhoto.y}px`,
+                        top: `${hoveredPhoto.y}px`,                        
                     }}
                 >
-                    <PhotoPreview src={hoveredPhoto.url} alt="Enlarged preview" />
+                    <PhotoPreview src={hoveredPhoto.url}  alt="Enlarged preview" />
                 </PhotoPreviewOverlay>
             )}
             <MarkerPopup>

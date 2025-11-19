@@ -33,17 +33,23 @@ function PopupContent({
     const openImg = (photoUrl: string): void => {
                         open(photoUrl, '_blank');
                     }
-    function getPropertie(propertie: string): import("react").ReactNode {
+    function getMainFeaturesPropertie(propertie: string): import("react").ReactNode {
         const choiceProp = propt.mainFeatures.find(x => x.type === propertie)
         if(!choiceProp)
             return '**'
         return choiceProp?.compactLabel ||choiceProp?.label || '**'
     }
+    function getPrimaryFeaturesPropertie(propertie: string): import("react").ReactNode {
+        const choiceProp = propt.primaryFeatures.find(x => x.name === propertie)
+        if(!choiceProp)
+            return '@@'
+        return choiceProp?.value ? "☝️" : "👇";
+    }
 
     return (
         <div>
             <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
-            <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {getPropertie('elevator')} - {getPropertie('surface')}]</p>
+            <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {getMainFeaturesPropertie('elevator')} - {getMainFeaturesPropertie('surface')} - {getPrimaryFeaturesPropertie("Accesso per disabili")}]</p>
             <Photos>
                 {currentPhotos.map((photo, index) => {
                     const largeUrl = photo.urls.xxl || photo.urls.large || photo.urls.medium || photo.urls.small;

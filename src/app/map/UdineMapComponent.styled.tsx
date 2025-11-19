@@ -69,8 +69,8 @@ export const PhotoPreviewOverlay = styled(Box)`
 `;
 
 export const PhotoPreview = styled.img`
-  max-width: 600px;
-  max-height: 600px;
+  max-width: 320px;
+  max-height: 320px;
   width: auto;
   height: auto;
   border-radius: 8px;
