@@ -3,11 +3,8 @@ import { useSelector, useDispatch } from "@/redux";
 import { setFilterAffito } from "@/redux/services/filter/filterTrunk";
 import { getFilter } from "@/redux/services/filter/filterSlice";
 import { FilterAffito } from "@/redux/services/filter/filterTypes";
-
-
-
-
-
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 interface MenuAffitoProps {
   filterAnchorEl: HTMLElement | null;
@@ -17,6 +14,75 @@ interface MenuAffitoProps {
 export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAffitoProps) {
   const filter = useSelector(getFilter) as FilterAffito;
   const dispatch = useDispatch();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const newFilter: FilterAffito = { priceMin: undefined, priceMax: undefined, floor: undefined, agentName: undefined, elevator: undefined, stateMaloi: undefined, province: undefined, accessoDisabili: undefined };
+    let hasChanges = false;
+
+    const priceMin = searchParams.get("priceMin");
+    if (priceMin) {
+      newFilter.priceMin = Number(priceMin);
+      hasChanges = true;
+    }
+
+    const priceMax = searchParams.get("priceMax");
+    if (priceMax) {
+      newFilter.priceMax = Number(priceMax);
+      hasChanges = true;
+    }
+
+    const floor = searchParams.get("floor");
+    if (floor) {
+      newFilter.floor = Number(floor);
+      hasChanges = true;
+    }
+
+    const agentName = searchParams.get("agentName");
+    if (agentName) {
+      newFilter.agentName = agentName;
+      hasChanges = true;
+    }
+
+    const elevator = searchParams.get("elevator");
+    if (elevator) {
+      // "Sì" | "No" | "empty" | undefined;
+      if (elevator === "Sì" || elevator === "No" || elevator === "empty") {
+        newFilter.elevator = elevator;
+        hasChanges = true;
+      }
+    }
+
+    const stateMaloi = searchParams.get("stateMaloi");
+    if (stateMaloi) {
+      // -1 | 0 | 1|2|undefined;
+      const stateVal = Number(stateMaloi);
+      if ([-1, 0, 1, 2].includes(stateVal)) {
+        newFilter.stateMaloi = stateVal as any;
+        hasChanges = true;
+      }
+    }
+
+    const province = searchParams.get("province");
+    if (province) {
+      // "Udine" |  "Trieste" |  undefined;
+      if (province === "Udine" || province === "Trieste") {
+        newFilter.province = province;
+        hasChanges = true;
+      }
+    }
+
+    const accessoDisabili = searchParams.get("accessoDisabili");
+    if (accessoDisabili) {
+      newFilter.accessoDisabili = Number(accessoDisabili);
+      hasChanges = true;
+    }
+
+    if (hasChanges) {
+      dispatch(setFilterAffito(newFilter));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, dispatch]);
 
   const handleChange = (field: keyof FilterAffito, value: any) => {
     dispatch(setFilterAffito({ ...filter, [field]: value }));
@@ -106,11 +172,11 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
           <InputLabel id="accessoDisabili-label">Accesso Disabili</InputLabel>
           <Select
             labelId="accessoDisabili-label"
-            value={filter.accessoDisabili === undefined ? '' : filter.accessoDisabili }
+            value={filter.accessoDisabili === undefined ? '' : filter.accessoDisabili}
             label="Accesso Disabili"
             onChange={e => {
               const val = e.target.value;
-              handleChange('accessoDisabili',  val );
+              handleChange('accessoDisabili', val);
             }}
           >
             <SelectItem value={undefined}>Any</SelectItem>

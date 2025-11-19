@@ -31,17 +31,21 @@ function PopupContent({
         setCurrentPage(prev => Math.min(totalPages - 1, prev + 1));
     };
     const openImg = (photoUrl: string): void => {
-                        open(photoUrl, '_blank');
-                    }
+        open(photoUrl, '_blank');
+    }
     function getMainFeaturesPropertie(propertie: string): import("react").ReactNode {
-        const choiceProp = propt.mainFeatures.find(x => x.type === propertie)
-        if(!choiceProp)
+        if (!propt || !propt.mainFeatures)
             return '**'
-        return choiceProp?.compactLabel ||choiceProp?.label || '**'
+        const choiceProp = propt.mainFeatures.find(x => x.type === propertie)
+        if (!choiceProp)
+            return '**'
+        return choiceProp?.compactLabel || choiceProp?.label || '**'
     }
     function getPrimaryFeaturesPropertie(propertie: string): import("react").ReactNode {
+        if (!propt || !propt.primaryFeatures)
+            return '@@'
         const choiceProp = propt.primaryFeatures.find(x => x.name === propertie)
-        if(!choiceProp)
+        if (!choiceProp)
             return '@@'
         return choiceProp?.value ? "☝️" : "👇";
     }
@@ -53,7 +57,7 @@ function PopupContent({
             <Photos>
                 {currentPhotos.map((photo, index) => {
                     const largeUrl = photo.urls.xxl || photo.urls.large || photo.urls.medium || photo.urls.small;
-                   
+
 
                     return (
                         <Photo
