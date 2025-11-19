@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "@/redux";
 import { setFilterAffito } from "@/redux/services/filter/filterTrunk";
 import { getFilter } from "@/redux/services/filter/filterSlice";
 import { FilterAffito } from "@/redux/services/filter/filterTypes";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 
 interface MenuAffitoProps {
@@ -15,37 +15,40 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
   const filter = useSelector(getFilter) as FilterAffito;
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
+  // Sync URL -> Redux (Initial Load & Back/Forward)
   useEffect(() => {
-    const newFilter: FilterAffito = { priceMin: undefined, priceMax: undefined, floor: undefined, agentName: undefined, elevator: undefined, stateMaloi: undefined, province: undefined, accessoDisabili: undefined };
+    const newFilter: FilterAffito = { ...filter };
     let hasChanges = false;
 
     const priceMin = searchParams.get("priceMin");
-    if (priceMin) {
+    if (priceMin && Number(priceMin) !== filter.priceMin) {
       newFilter.priceMin = Number(priceMin);
       hasChanges = true;
     }
 
     const priceMax = searchParams.get("priceMax");
-    if (priceMax) {
+    if (priceMax && Number(priceMax) !== filter.priceMax) {
       newFilter.priceMax = Number(priceMax);
       hasChanges = true;
     }
 
     const floor = searchParams.get("floor");
-    if (floor) {
+    if (floor && Number(floor) !== filter.floor) {
       newFilter.floor = Number(floor);
       hasChanges = true;
     }
 
     const agentName = searchParams.get("agentName");
-    if (agentName) {
+    if (agentName && agentName !== filter.agentName) {
       newFilter.agentName = agentName;
       hasChanges = true;
     }
 
     const elevator = searchParams.get("elevator");
-    if (elevator) {
+    if (elevator && elevator !== filter.elevator) {
       // "Sì" | "No" | "empty" | undefined;
       if (elevator === "Sì" || elevator === "No" || elevator === "empty") {
         newFilter.elevator = elevator;
@@ -57,14 +60,14 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
     if (stateMaloi) {
       // -1 | 0 | 1|2|undefined;
       const stateVal = Number(stateMaloi);
-      if ([-1, 0, 1, 2].includes(stateVal)) {
+      if ([-1, 0, 1, 2].includes(stateVal) && stateVal !== filter.stateMaloi) {
         newFilter.stateMaloi = stateVal as any;
         hasChanges = true;
       }
     }
 
     const province = searchParams.get("province");
-    if (province) {
+    if (province && province !== filter.province) {
       // "Udine" |  "Trieste" |  undefined;
       if (province === "Udine" || province === "Trieste") {
         newFilter.province = province;
@@ -73,7 +76,7 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
     }
 
     const accessoDisabili = searchParams.get("accessoDisabili");
-    if (accessoDisabili) {
+    if (accessoDisabili && Number(accessoDisabili) !== filter.accessoDisabili) {
       newFilter.accessoDisabili = Number(accessoDisabili);
       hasChanges = true;
     }
@@ -83,6 +86,26 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, dispatch]);
+
+  // Sync Redux -> URL
+  useEffect(() => {
+    const params = new URLSearchParams();
+    if (filter.priceMin) params.set("priceMin", filter.priceMin.toString());
+    if (filter.priceMax) params.set("priceMax", filter.priceMax.toString());
+    if (filter.floor) params.set("floor", filter.floor.toString());
+    if (filter.agentName) params.set("agentName", filter.agentName);
+    if (filter.elevator) params.set("elevator", filter.elevator);
+    if (filter.stateMaloi !== undefined) params.set("stateMaloi", filter.stateMaloi.toString());
+    if (filter.province) params.set("province", filter.province);
+    if (filter.accessoDisabili !== undefined) params.set("accessoDisabili", filter.accessoDisabili.toString());
+
+    const newSearch = params.toString();
+    const currentSearch = searchParams.toString();
+
+    if (newSearch !== currentSearch) {
+      router.replace(`${pathname}?${newSearch}`);
+    }
+  }, [filter, pathname, router, searchParams]);
 
   const handleChange = (field: keyof FilterAffito, value: any) => {
     dispatch(setFilterAffito({ ...filter, [field]: value }));
