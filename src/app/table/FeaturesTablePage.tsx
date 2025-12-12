@@ -70,6 +70,10 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
       stateMaloi: affito.stateMaloi, // Add this for the link
     }
     coluns.forEach((colun: string) => {
+      if(affito.realEstate.properties == undefined){
+        objAffito[colun] = '@&@'
+        return
+      }
       const feature = affito.realEstate.properties.mainFeatures
         .find((feature: MainFeature) => feature.type === colun);
 
@@ -80,8 +84,7 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
 
   affiti
     .forEach((affito: AffitoEntity) => {
-      const realestate = affito.realEstate
-      realestate.properties.mainFeatures
+      affito.realEstate.properties?.mainFeatures
         .forEach((feature: MainFeature) => {
           coluns.add(feature.type)
         })

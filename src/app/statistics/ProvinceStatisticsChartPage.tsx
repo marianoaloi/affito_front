@@ -46,7 +46,7 @@ const BarChartProvince = ({aggregatedData,normalize} : {aggregatedData : Provinc
                     ]}
                     yAxis={[
                         {
-                            label: 'Count'
+                            label: normalize ? ' % ' : 'Count'
                         }
                     ]}
                     series={[

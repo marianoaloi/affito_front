@@ -55,6 +55,10 @@ function affitoDataBase(
     onMouseLeave: () => void
 ): ReactNode {
     const propt = affito.realEstate.properties;
+    if(!propt){
+        console.log(affito.realEstate.title)
+        return null;
+    }
     const { latitude, longitude } = propt.location;
     return (
         <Marker key={affito._id}

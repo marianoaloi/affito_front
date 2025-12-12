@@ -77,7 +77,7 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
 
     const accessoDisabili = searchParams.get("accessoDisabili");
     if (accessoDisabili && Number(accessoDisabili) !== filter.accessoDisabili) {
-      newFilter.accessoDisabili = Number(accessoDisabili);
+      newFilter.accessoDisabili = Number(accessoDisabili) as 0 | 1 | -1;
       hasChanges = true;
     }
 
@@ -203,6 +203,7 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
             }}
           >
             <SelectItem value={undefined}>Any</SelectItem>
+            <SelectItem value={-1}>Empty</SelectItem>
             <SelectItem value={1}>Yes</SelectItem>
             <SelectItem value={0}>No</SelectItem>
           </Select>

@@ -9,6 +9,7 @@ interface DisabiliStats {
     province: string;
     si: number;
     no: number;
+    empty: number;
 
 }
 
@@ -18,13 +19,16 @@ const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: Disab
     const provinces = aggregatedData.map(d => d.province);
     let siData = aggregatedData.map(d => d.si);
     let noData = aggregatedData.map(d => d.no);
+    let emptyData = aggregatedData.map(d => d.empty);
+
 
     if (normalize) {
-        const totalCounts = aggregatedData.map(d => d.si + d.no);
+        const totalCounts = aggregatedData.map(d => d.si + d.no + d.empty);
         const normalizeData = (data: number[], totals: number[]) =>
             data.map((value, index) => (totals[index] > 0 ? (value / totals[index]) * 100 : 0));
         siData = normalizeData(siData, totalCounts);
         noData = normalizeData(noData, totalCounts);
+        emptyData = normalizeData(emptyData, totalCounts);
     }
 
 
@@ -40,7 +44,7 @@ const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: Disab
                 ]}
                 yAxis={[
                     {
-                        label: 'Count'
+                        label: normalize ? ' % ' : 'Count'
                     }
                 ]}
                 series={[
@@ -54,6 +58,12 @@ const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: Disab
                         data: noData,
                         label: 'No',
                         color: '#f44336',
+                        stack: 'status'
+                    },
+                    {
+                        data: emptyData,
+                        label: 'Senza Info',
+                        color: '#9e9e9e',
                         stack: 'status'
                     }
                 ]}
@@ -81,17 +91,21 @@ export default function AccessoDisabiliStatisticsChartPage({ affiti }: Statistic
                 disable[province] = {
                     province,
                     si: 0,
-                    no: 0
+                    no: 0,
+                    empty: 0
                 };
             }
             const accessoDisabili = affito.realEstate.properties?.primaryFeatures?.find(f => f.name.toUpperCase() === "ACCESSO PER DISABILI")
+
+            const fieldProvince = disable[province];
             if (accessoDisabili) {
-                const fieldProvince = disable[province];
-                if (accessoDisabili.value !== 0) {
+                if (accessoDisabili.value == 1) {
                     fieldProvince.si += 1;
-                } else {
+                } else if (accessoDisabili.value == 0) {
                     fieldProvince.no += 1;
                 }
+            } else {
+                fieldProvince.empty += 1;
             }
 
         });

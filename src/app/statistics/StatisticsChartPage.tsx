@@ -11,9 +11,9 @@ import { StatisticsChartPageProps } from "./StatisticsCharPageProps";
 export default function StatisticsChartPage({ affiti }: StatisticsChartPageProps) {
     return (
         <main>
-            <ProvinceStatisticsChartPage affiti={affiti} />
-            <ElevatorStatisticsChartPage affiti={affiti} />
             <AccessoDisabiliStatisticsChartPage affiti={affiti} />
+            <ElevatorStatisticsChartPage affiti={affiti} />
+            <ProvinceStatisticsChartPage affiti={affiti} />
         </main>
     );
 

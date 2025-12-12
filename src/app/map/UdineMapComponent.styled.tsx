@@ -68,6 +68,16 @@ export const PhotoPreviewOverlay = styled(Box)`
   transition: opacity 0.2s ease-in-out;
 `;
 
+export const PopUpInfo = styled.span`
+    padding: 1px 3px;
+    background: whitesmoke;
+    color: black;
+`
+export const PopTextBox = styled.div`
+    display: flex;
+    flex-direction: row
+`
+
 export const PhotoPreview = styled.img`
   max-width: 320px;
   max-height: 320px;

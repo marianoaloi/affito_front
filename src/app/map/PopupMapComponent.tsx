@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ChoiceState from "../component/ChoiceState";
 import { AffitoEntity } from "../entity/AffitoEntity";
-import { Photo, Photos } from "./UdineMapComponent.styled";
+import { Photo, Photos, PopUpInfo } from "./UdineMapComponent.styled";
 
 
 function PopupContent({
@@ -33,7 +33,7 @@ function PopupContent({
     const openImg = (photoUrl: string): void => {
         open(photoUrl, '_blank');
     }
-    function getMainFeaturesPropertie(propertie: string): import("react").ReactNode {
+    function getMainFeaturesPropertie(propertie: string): string {
         if (!propt || !propt.mainFeatures)
             return '**'
         const choiceProp = propt.mainFeatures.find(x => x.type === propertie)
@@ -41,19 +41,26 @@ function PopupContent({
             return '**'
         return choiceProp?.compactLabel || choiceProp?.label || '**'
     }
-    function getPrimaryFeaturesPropertie(propertie: string): import("react").ReactNode {
+    function getPrimaryFeaturesPropertie(propertie: string): string {
         if (!propt || !propt.primaryFeatures)
-            return '@@'
+            return '🟡'
         const choiceProp = propt.primaryFeatures.find(x => x.name === propertie)
         if (!choiceProp)
-            return '@@'
-        return choiceProp?.value ? "☝️" : "👇";
+            return '🟡'
+        return choiceProp?.value ? "♿" : "❌";
     }
+
 
     return (
         <div>
             <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
-            <p>{affito.realEstate.title} [{propt.floor?.abbreviation} - {getMainFeaturesPropertie('elevator')} - {getMainFeaturesPropertie('surface')} - {getPrimaryFeaturesPropertie("Accesso per disabili")}]</p>
+                {affito.realEstate.title} 
+            
+                <PopUpInfo title="floor">{propt.floor?.abbreviation}</PopUpInfo>
+                <PopUpInfo title="elevator">{getMainFeaturesPropertie('elevator')}</PopUpInfo>
+                <PopUpInfo title="m²">{getMainFeaturesPropertie('surface')}</PopUpInfo>
+                <PopUpInfo title="Disable">{getPrimaryFeaturesPropertie('Accesso per disabili')}</PopUpInfo>
+            
             <Photos>
                 {currentPhotos.map((photo, index) => {
                     const largeUrl = photo.urls.xxl || photo.urls.large || photo.urls.medium || photo.urls.small;

@@ -43,7 +43,7 @@ const BarChartElevator = ({aggregatedData,normalize} : {aggregatedData : Elevato
                     ]}
                     yAxis={[
                         {
-                            label: 'Count'
+                            label: normalize ? ' % ' : 'Count'
                         }
                     ]}
                     series={[
@@ -61,7 +61,7 @@ const BarChartElevator = ({aggregatedData,normalize} : {aggregatedData : Elevato
                         },
                         {
                             data: emptyData,
-                            label: 'Empty',
+                            label: 'Senza Info',
                             color: '#9e9e9e',
                             stack: 'status'
                         }
@@ -87,7 +87,7 @@ export default function ElevatorStatisticsChartPage({ affiti }: StatisticsChartP
             if (!a.realEstate.properties || !a.realEstate.properties.mainFeatures) {
                 return { elevator: 'niente', province: "niente" };
             }
-            const elevator = a.realEstate.properties.mainFeatures.find(f => f.type == 'elevator')?.compactLabel || 'empty';
+            const elevator = a.realEstate.properties.mainFeatures.find(f => f.type == 'elevator')?.compactLabel || 'Senza Info';
             return {
                 elevator: elevator,
                 province: a.realEstate.properties.location.province
