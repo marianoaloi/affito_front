@@ -1,5 +1,6 @@
 import { AffitoEntity } from "@/app/entity/AffitoEntity";
 import { FilterAffito } from "../filter/filterTypes";
+import { ProvinceCountList } from "@/app/entity/CountEntity";
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://us-central1-affitiudine.cloudfunctions.net/api' : 'http://localhost:5088';
 // 'https://us-central1-affitiudine.cloudfunctions.net/api';
@@ -43,6 +44,18 @@ const getAffiti =
         return data.data;
     }
 
+const count = 
+    async(): Promise<ProvinceCountList> => {
+        const response = await fetchRetry(`${API_BASE_URL}/api/count`,10_000,5, {
+            method: 'GET',
+        });
+        if (!response.ok) {
+            throw new Error('Failed to fetch affito data');
+        }
+        const data = await response.json();
+        return data.data;
+    }
+
 export type returnAffitoState = {
     success: boolean;
     message: string;
@@ -63,5 +76,5 @@ const setAffitoState = async (realEstateId: string | number, newState: number, t
     return response.json();
 };
 
-export { setAffitoState };
+export { setAffitoState , count};
 export default getAffiti;

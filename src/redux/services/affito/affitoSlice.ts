@@ -1,17 +1,20 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { clearAffitoError, fetchAffito, updateAffitoState } from './affitoTrunk';
+import { clearAffitoError, countTrunk, fetchAffito, updateAffitoState } from './affitoTrunk';
 import { AffitoEntity } from '@/app/entity/AffitoEntity';
+import { ProvinceCountList } from '@/app/entity/CountEntity';
 
 interface AffitoState {
-  data: AffitoEntity[] ;
+  data: AffitoEntity[];
   loading: 'idle' | 'pending' | 'succeeded' | 'failed';
   error: string | null;
+  counts: ProvinceCountList;
 }
 
 const initialState: AffitoState = {
   data: [],
   loading: 'idle',
   error: null,
+  counts: [],
 };
 
 const affitoSlice = createSlice({
@@ -21,6 +24,13 @@ const affitoSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+  },
+  selectors: {
+    selectAllAffitoSelector: (state: AffitoState) => state.data,
+    getCountsSelector: (state: AffitoState) => state.counts,
+    getErrorAffitoSelector: (state: AffitoState) => state.error,
+    isLoadingAffitoSelector: (state: AffitoState) => state.loading === 'pending',
+    isErrorAffitoSelector: (state: AffitoState) => state.loading === 'failed',
   },
   extraReducers: (builder) => {
     builder
@@ -37,12 +47,12 @@ const affitoSlice = createSlice({
       })
 
       .addCase(clearAffitoError.fulfilled, (state) => {
-        state.error = null; 
+        state.error = null;
       })
-      
-      .addCase(updateAffitoState.pending, (state) => {
-        state.loading = 'pending';
-      })
+
+      // .addCase(updateAffitoState.pending, (state) => {
+      //   // state.loading = 'pending';
+      // })
       .addCase(updateAffitoState.rejected, (state, action) => {
         state.loading = 'failed';
         state.error = action.error.message || 'An error occurred';
@@ -54,11 +64,20 @@ const affitoSlice = createSlice({
         const status = action.payload.success;
         if (affito && status) {
           affito.stateMaloi = newState;
-        }else
-        {
+        } else {
           state.error = !affito ? "Affito not found" : action.payload.message
         }
-      });
+      })
+
+      .addCase(countTrunk.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        state.counts = action.payload
+      })
+      .addCase(countTrunk.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'An error occurred';
+
+      })
   },
 });
 
@@ -67,3 +86,4 @@ export const affitoActions = affitoSlice.actions;
 export const affitoReducer = affitoSlice.reducer;
 
 export const affitoSelectors = affitoSlice.selectors;
+export const affitoCountSelectors = affitoSlice.selectors.getCountsSelector;

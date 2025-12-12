@@ -1,13 +1,14 @@
 "use client";
-import { ReactNode, useEffect, useState, useRef } from "react";
+import { ReactNode, useEffect, useState, useRef, use } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import L, { icon } from "leaflet";
 import { MarkerPopup, PhotoPreview, PhotoPreviewOverlay, LuogoMap, QtdMap } from "./UdineMapComponent.styled";
-import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition, getFilter, FilterAffito, setFilterAffito } from "@/redux";
+import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition, getFilter, FilterAffito, setFilterAffito, getCounts, affitoSelectors, affitoCountSelectors } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import './UdineMapComponent.css'
 import { defaultMapStateExport, triesteMapStateExport } from "@/redux/services/map/mapSlice";
 import PopupContent from "./PopupMapComponent";
+import { ProvinceCountEntity, ProvinceCountList } from "../entity/CountEntity";
 
 
 function MapEventHandler() {
@@ -55,7 +56,7 @@ function affitoDataBase(
     onMouseLeave: () => void
 ): ReactNode {
     const propt = affito.realEstate.properties;
-    if(!propt){
+    if (!propt) {
         console.log(affito.realEstate.title)
         return null;
     }
@@ -104,6 +105,7 @@ export default function UdineMapComponent() {
     const affiti = useSelector(selectAllAffito);
     const mapState = useSelector(selectMapPosition);
     const filter = useSelector(getFilter) as FilterAffito;
+    const counts = useSelector(getCounts) as ProvinceCountList;
     const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([]);
     const [hoveredPhoto, setHoveredPhoto] = useState<{ url: string; x: number; y: number } | null>(null);
 
@@ -187,8 +189,8 @@ export default function UdineMapComponent() {
         // eslint-disable-next-line no-console
         dispatch(setFilterAffito({ ...filter, [field]: value }));
     }
-
-    const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures.find(f => f.type == 'elevator')?.compactLabel)
+    const findValueCountProvince = (field: string) => (counts.find(a => a._id == filter.province)?.[field as keyof ProvinceCountEntity] || 0);
+    const findValueCount = (field: string) => filter.province ? findValueCountProvince(field) : counts.map((co: any) => co[field]).reduce((a, b) => a + b, 0);
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>
@@ -208,21 +210,21 @@ export default function UdineMapComponent() {
                 <div><strong>Zoom:</strong> {mapState.zoom}</div> */}
                 <QtdMap>
                     <strong>Elevator:</strong>
-                    <span className={filter.elevator == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", undefined)}>{affiti.length}</span>
-                    <span className={filter.elevator == "No" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "No")}>{elevatorCount.filter(a => a == "No").length}</span>
-                    <span className={filter.elevator == "Sì" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "Sì")}>{elevatorCount.filter(a => a == "Sì").length}</span>
-                    <span className={filter.elevator == "empty" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "empty")}>{elevatorCount.filter(a => !a).length}</span>
+                    <span className={filter.elevator == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", undefined)}>{findValueCount('total')}</span>
+                    <span className={filter.elevator == "No" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "No")}>{findValueCount('noElevator')}</span>
+                    <span className={filter.elevator == "Sì" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "Sì")}>{findValueCount('elevator')}</span>
+                    <span className={filter.elevator == "empty" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "empty")}>{findValueCount('emptyElevator')}</span>
                 </QtdMap>
                 <QtdMap>
                     <strong>Qtd:</strong>
-                    <span className={filter.stateMaloi == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", undefined)}>{affiti.length}</span>
-                    <span className={filter.stateMaloi == 0 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 0)}>{affiti.filter(a => a.stateMaloi == 0).length}</span>
-                    <span className={filter.stateMaloi == 1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 1)}>{affiti.filter(a => a.stateMaloi == 1).length}</span>
-                    <span className={filter.stateMaloi == -1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", -1)}>{affiti.filter(a => undefined == a.stateMaloi).length}</span>
+                    <span className={filter.stateMaloi == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", undefined)}>{findValueCount('total')}</span>
+                    <span className={filter.stateMaloi == 0 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 0)}>{findValueCount('deny')}</span>
+                    <span className={filter.stateMaloi == 1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 1)}>{findValueCount('accept')}</span>
+                    <span className={filter.stateMaloi == -1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", -1)}>{findValueCount('emptyChoise')}</span>
                 </QtdMap>
                 <LuogoMap>
-                    <span className={filter.province == 'Udine' ? "borderSelected" : ""} onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
-                    <span className={filter.province == 'Trieste' ? "borderSelected" : ""} onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
+                    <span className={filter.province == 'Udine' ? "borderSelected" : ""} onClick={() => changeMap(defaultMapStateExport)}>{`Udine (${counts.find(a => a._id == 'Udine')?.total})`}</span>
+                    <span className={filter.province == 'Trieste' ? "borderSelected" : ""} onClick={() => changeMap(triesteMapStateExport)}>{`Trieste (${counts.find(a => a._id == 'Trieste')?.total})`}</span>
                 </LuogoMap>
             </MarkerPopup>
             <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>

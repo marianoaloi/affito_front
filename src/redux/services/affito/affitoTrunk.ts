@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import getAffiti, { setAffitoState } from "./affitoService";
+import getAffiti, { count, setAffitoState } from "./affitoService";
 import { FilterAffito } from "../filter/filterTypes";
 
 export const fetchAffito = createAsyncThunk(
@@ -20,3 +20,10 @@ export const clearAffitoError = createAsyncThunk(
   'affito/clearAffitoError',  () => {
     return undefined;
   })
+
+export const countTrunk = createAsyncThunk(
+  'affito/countTrunk',
+  async () => {
+    return await count()
+  }
+)
