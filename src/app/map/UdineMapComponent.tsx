@@ -104,6 +104,7 @@ export default function UdineMapComponent() {
     const affiti = useSelector(selectAllAffito);
     const mapState = useSelector(selectMapPosition);
     const filter = useSelector(getFilter) as FilterAffito;
+    const isLoading = useSelector(state => state.affiti.loading === 'updateState'); 
     const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([]);
     const [hoveredPhoto, setHoveredPhoto] = useState<{ url: string; x: number; y: number } | null>(null);
 
@@ -190,7 +191,8 @@ export default function UdineMapComponent() {
 
     const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures.find(f => f.type == 'elevator')?.compactLabel)
 
-    return (
+
+    return isLoading ? <h1>Loading...</h1> : (
         <div style={{ height: "100vh", width: "100%" }}>
             {hoveredPhoto && (
                 <PhotoPreviewOverlay
@@ -232,7 +234,7 @@ export default function UdineMapComponent() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                {affitiInMap}
+                { affitiInMap}
             </MapContainer>
         </div>
     );

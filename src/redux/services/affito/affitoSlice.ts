@@ -3,8 +3,8 @@ import { clearAffitoError, fetchAffito, updateAffitoState } from './affitoTrunk'
 import { AffitoEntity } from '@/app/entity/AffitoEntity';
 
 interface AffitoState {
-  data: AffitoEntity[] ;
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed';
+  data: AffitoEntity[];
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed' | 'updateState';
   error: string | null;
 }
 
@@ -37,11 +37,11 @@ const affitoSlice = createSlice({
       })
 
       .addCase(clearAffitoError.fulfilled, (state) => {
-        state.error = null; 
+        state.error = null;
       })
-      
+
       .addCase(updateAffitoState.pending, (state) => {
-        state.loading = 'pending';
+        state.loading = 'updateState';
       })
       .addCase(updateAffitoState.rejected, (state, action) => {
         state.loading = 'failed';
@@ -54,8 +54,8 @@ const affitoSlice = createSlice({
         const status = action.payload.success;
         if (affito && status) {
           affito.stateMaloi = newState;
-        }else
-        {
+        } else {
+          state.loading = 'failed';
           state.error = !affito ? "Affito not found" : action.payload.message
         }
       });
