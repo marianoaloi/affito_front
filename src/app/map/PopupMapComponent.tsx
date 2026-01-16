@@ -7,11 +7,13 @@ import { Photo, Photos, PopUpInfo } from "./UdineMapComponent.styled";
 function PopupContent({
     affito,
     onMouseEnter,
-    onMouseLeave
+    onMouseLeave,
+    closePopup
 }: {
     affito: AffitoEntity;
     onMouseEnter: (photoUrl: string, event: React.MouseEvent<HTMLImageElement>) => void;
     onMouseLeave: () => void;
+    closePopup?: () => void;
 }) {
     const [currentPage, setCurrentPage] = useState(0);
     const propt = affito.realEstate.properties;
@@ -53,7 +55,7 @@ function PopupContent({
 
     return (
         <div>
-            <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} />
+            <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} closePopup={closePopup} />
                 {affito.realEstate.title} 
             
                 <PopUpInfo title="floor">{propt.floor?.abbreviation}</PopUpInfo>

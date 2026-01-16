@@ -88,6 +88,7 @@ function affitoDataBase(
                     affito={affito}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
+                    closePopup={L.popup().close}
                 />
             </Popup>
         </Marker>
@@ -104,7 +105,6 @@ export default function UdineMapComponent() {
     const affiti = useSelector(selectAllAffito);
     const mapState = useSelector(selectMapPosition);
     const filter = useSelector(getFilter) as FilterAffito;
-    const isLoading = useSelector(state => state.affiti.loading === 'updateState'); 
     const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([]);
     const [hoveredPhoto, setHoveredPhoto] = useState<{ url: string; x: number; y: number } | null>(null);
 
@@ -163,7 +163,7 @@ export default function UdineMapComponent() {
         // });
         // eslint-disable-next-line react-hooks/exhaustive-deps
 
-    }, []);
+    }, [affiti]);
 
 
     const changeMap = (newMapState: { latitude: number; longitude: number; zoom: number; local: string }) => {
@@ -192,7 +192,7 @@ export default function UdineMapComponent() {
     const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures.find(f => f.type == 'elevator')?.compactLabel)
 
 
-    return isLoading ? <h1>Loading...</h1> : (
+    return (
         <div style={{ height: "100vh", width: "100%" }}>
             {hoveredPhoto && (
                 <PhotoPreviewOverlay

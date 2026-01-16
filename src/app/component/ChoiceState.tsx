@@ -6,7 +6,7 @@ import { useAuth } from "../menu/AuthContext";
 
 type AffitoState = 1 | 2 | 0 | undefined;
 
-const ChoiceState: ({ stateMaloi, id }: { stateMaloi: number, id: number }) => JSX.Element = ({stateMaloi, id}) => {
+const ChoiceState: ({ stateMaloi, id , closePopup }: { stateMaloi: number, id: number , closePopup?: () => void}) => JSX.Element = ({stateMaloi, id,closePopup}) => {
     
       const dispatch = useDispatch();
     const { getAuthToken,user } = useAuth();
@@ -20,6 +20,9 @@ const ChoiceState: ({ stateMaloi, id }: { stateMaloi: number, id: number }) => J
                 }
                 if (newState !== undefined) {
                     dispatch(updateAffitoState({ realEstateId, newState, token }));
+                    if(closePopup){
+                        // closePopup()
+                    }
                 } else {
                     throw new Error("No state specified")
                 }
