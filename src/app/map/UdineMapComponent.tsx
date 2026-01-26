@@ -225,6 +225,12 @@ export default function UdineMapComponent() {
                 <LuogoMap>
                     <span className={filter.province == 'Udine' ? "borderSelected" : ""} onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
                     <span className={filter.province == 'Trieste' ? "borderSelected" : ""} onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
+                    <div>
+                        <span className={filter.accessoDisabili == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  undefined)}>⚫️</span>
+                        <span className={filter.accessoDisabili == 0 ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  0)}>❌</span>
+                        <span className={filter.accessoDisabili == 1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  1)}>♿</span>
+                        <span className={filter.accessoDisabili == -1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  -1)}>🟡</span>
+                    </div>
                 </LuogoMap>
             </MarkerPopup>
             <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>
