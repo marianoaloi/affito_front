@@ -22,6 +22,7 @@ const ChoiceState: ({ stateMaloi, id , closePopup }: { stateMaloi: number, id: n
                     dispatch(updateAffitoState({ realEstateId, newState, token }));
                     if(closePopup){
                         // closePopup()
+                        document.querySelectorAll<HTMLElement>('.leaflet-popup-close-button').forEach(el => el.click());
                     }
                 } else {
                     throw new Error("No state specified")

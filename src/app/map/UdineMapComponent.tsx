@@ -52,7 +52,8 @@ function MapPositionUpdater({ mapRef }: { mapRef: React.MutableRefObject<L.Map |
 function affitoDataBase(
     affito: AffitoEntity,
     onMouseEnter: (photoUrl: string, event: React.MouseEvent<HTMLImageElement>) => void,
-    onMouseLeave: () => void
+    onMouseLeave: () => void ,
+    handleMouseLeave: () => void
 ): ReactNode {
     const propt = affito.realEstate.properties;
     if(!propt){
@@ -88,7 +89,7 @@ function affitoDataBase(
                     affito={affito}
                     onMouseEnter={onMouseEnter}
                     onMouseLeave={onMouseLeave}
-                    closePopup={L.popup().close}
+                    closePopup={handleMouseLeave}
                 />
             </Popup>
         </Marker>
@@ -122,7 +123,7 @@ export default function UdineMapComponent() {
     };
 
     useEffect(() => {
-        const affitiAux = affiti.map((affito) => affitoDataBase(affito, handleMouseEnter, handleMouseLeave));
+        const affitiAux = affiti.map((affito) => affitoDataBase(affito, handleMouseEnter, handleMouseLeave,handleMouseLeave));
         const meIcon = L.divIcon(
             {
                 html: '<i class="fas fa-map-marker-alt" style="    font-size: 2em;    margin-top: -0.6em;    margin-left: -0.6em;    position: absolute;">🫵</i>',
@@ -241,7 +242,7 @@ export default function UdineMapComponent() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 { affitiInMap}
-            </MapContainer>
+            </MapContainer><span onClick={handleMouseLeave}>Maloi</span>
         </div>
     );
 }

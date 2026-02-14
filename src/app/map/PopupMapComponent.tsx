@@ -56,13 +56,13 @@ function PopupContent({
     return (
         <div>
             <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} closePopup={closePopup} />
-                {affito.realEstate.title} 
-            
-                <PopUpInfo title="floor">{propt.floor?.abbreviation}</PopUpInfo>
-                <PopUpInfo title="elevator">{getMainFeaturesPropertie('elevator')}</PopUpInfo>
-                <PopUpInfo title="m²">{getMainFeaturesPropertie('surface')}</PopUpInfo>
-                <PopUpInfo title="Disable">{getPrimaryFeaturesPropertie('Accesso per disabili')}</PopUpInfo>
-            
+            {affito.realEstate.title}
+
+            <PopUpInfo title="floor">{propt.floor?.abbreviation}</PopUpInfo>
+            <PopUpInfo title="elevator">{getMainFeaturesPropertie('elevator')}</PopUpInfo>
+            <PopUpInfo title="m²">{getMainFeaturesPropertie('surface')}</PopUpInfo>
+            <PopUpInfo title="Disable">{getPrimaryFeaturesPropertie('Accesso per disabili')}</PopUpInfo>
+
             <Photos>
                 {currentPhotos.map((photo, index) => {
                     const largeUrl = photo.urls.xxl || photo.urls.large || photo.urls.medium || photo.urls.small;
