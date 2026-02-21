@@ -7,6 +7,10 @@ export interface AffitoEntity {
   // idGeoHash: string;
   // mLastUpdate: number;
   stateMaloi: number;
+
+  create?: Date;
+  last?: Date;
+  imobiliare?: Date;
 }
 
 export interface RealEstate {
@@ -78,7 +82,7 @@ interface Property {
   residentialUnits: null;
   commercialUnits: null;
   land: null;
-  mainFeatures: MainFeature[];
+  mainFeatures?: MainFeature[];
 }
 
 interface PrimaryFeature {

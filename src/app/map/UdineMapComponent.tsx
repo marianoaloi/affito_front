@@ -190,7 +190,7 @@ export default function UdineMapComponent() {
         dispatch(setFilterAffito({ ...filter, [field]: value }));
     }
 
-    const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures.find(f => f.type == 'elevator')?.compactLabel)
+    const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures?.find(f => f.type == 'elevator')?.compactLabel)
 
 
     return (
@@ -242,7 +242,7 @@ export default function UdineMapComponent() {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 { affitiInMap}
-            </MapContainer><span onClick={handleMouseLeave}>Maloi</span>
+            </MapContainer>
         </div>
     );
 }

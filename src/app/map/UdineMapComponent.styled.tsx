@@ -73,6 +73,19 @@ export const PopUpInfo = styled.span`
     background: whitesmoke;
     color: black;
 `
+export const TopActionLink = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`
+export const SmallInfo = styled.div`
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    background: lightyellow;
+`
+
 export const PopTextBox = styled.div`
     display: flex;
     flex-direction: row

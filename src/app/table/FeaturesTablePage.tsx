@@ -9,8 +9,7 @@ import { FilterAffito, getErrorAffito, getFilter, setFilterAffito, useDispatch, 
 import { AffitiPageProps } from '../entity/AffitiPageProps';
 import ChoiceState from '../component/ChoiceState';
 import { AffitoEntity, MainFeature } from '../entity/AffitoEntity';
-
-
+import { timeAgo } from '../util/timeAgo';
 
 const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   const coluns = new Set<string>();
@@ -55,6 +54,9 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
       field: 'command', headerName: 'Command', width: 200, filterable: false,
       renderCell: (params) => <ChoiceState stateMaloi={params.row.stateMaloi} id={params.row.id} />
     },
+    { field: 'create', headerName: 'Create', width: 80 },
+    { field: 'imobiliare', headerName: 'Imobiliare', width: 90 },
+    { field: 'last', headerName: 'Last', width: 70 },
   ]
 
   coluns.forEach((colun: string) => {
@@ -67,7 +69,10 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
       id: affito._id,
       title: affito.realEstate.title,
       price: affito.realEstate.price.value,
-      stateMaloi: affito.stateMaloi, // Add this for the link
+      stateMaloi: affito.stateMaloi,
+      create: timeAgo(affito.create),
+      imobiliare: timeAgo(affito.imobiliare),
+      last: timeAgo(affito.last),
     }
     coluns.forEach((colun: string) => {
       if(affito.realEstate.properties == undefined){
@@ -75,7 +80,7 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
         return
       }
       const feature = affito.realEstate.properties.mainFeatures
-        .find((feature: MainFeature) => feature.type === colun);
+        ?.find((feature: MainFeature) => feature.type === colun);
 
       objAffito[colun] = feature?.compactLabel || feature?.label || ''
     })
@@ -85,7 +90,7 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   affiti
     .forEach((affito: AffitoEntity) => {
       affito.realEstate.properties?.mainFeatures
-        .forEach((feature: MainFeature) => {
+        ?.forEach((feature: MainFeature) => {
           coluns.add(feature.type)
         })
     }
