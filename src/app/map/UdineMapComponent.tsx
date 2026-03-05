@@ -217,11 +217,15 @@ export default function UdineMapComponent() {
                     <span className={filter.elevator == "empty" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "empty")}>{elevatorCount.filter(a => !a).length}</span>
                 </QtdMap>
                 <QtdMap>
-                    <strong>Qtd:</strong>
+                    <strong>Accept:</strong>
                     <span className={filter.stateMaloi == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", undefined)}>{affiti.length}</span>
                     <span className={filter.stateMaloi == 0 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 0)}>{affiti.filter(a => a.stateMaloi == 0).length}</span>
                     <span className={filter.stateMaloi == 1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 1)}>{affiti.filter(a => a.stateMaloi == 1).length}</span>
                     <span className={filter.stateMaloi == -1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", -1)}>{affiti.filter(a => undefined == a.stateMaloi).length}</span>
+                    <div >
+                        <span>Terra</span>
+                        <input type="checkbox" checked={filter.floor === 'Terra'} onChange={(ev) => changeFilterStatus('floor',ev.target.checked ? 'Terra' : undefined)}></input>
+                    </div>
                 </QtdMap>
                 <LuogoMap>
                     <span className={filter.province == 'Udine' ? "borderSelected" : ""} onClick={() => changeMap(defaultMapStateExport)}>Udine</span>

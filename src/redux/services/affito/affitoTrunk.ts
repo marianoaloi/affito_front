@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import getAffiti, { setAffitoState } from "./affitoService";
+import getAffiti, { setAffitoState, setDescription } from "./affitoService";
 import { FilterAffito } from "../filter/filterTypes";
 
 export const fetchAffito = createAsyncThunk(
@@ -20,3 +20,10 @@ export const clearAffitoError = createAsyncThunk(
   'affito/clearAffitoError',  () => {
     return undefined;
   })
+
+export const updateAffitoDescription = createAsyncThunk(
+  'affito/updateAffitoDescription',
+  async ({ realEstateId, description, token }: { realEstateId: string | number, description: string, token: string }) => {
+    return await setDescription(realEstateId, description, token);
+  }
+);

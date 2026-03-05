@@ -1,5 +1,6 @@
 import { useState } from "react";
 import ChoiceState from "../component/ChoiceState";
+import DescriptionEditor from "../component/DescriptionEditor";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import { Photo, Photos, PopUpInfo, SmallInfo, TopActionLink } from "./UdineMapComponent.styled";
 import { timeAgo } from "../util/timeAgo";
@@ -78,6 +79,7 @@ function PopupContent({
             <PopUpInfo title="Create">{timeAgo(affito.create)}</PopUpInfo>
             <PopUpInfo title="Imobiliare">{timeAgo(affito.imobiliare)}</PopUpInfo>
             <PopUpInfo title="Last">{timeAgo(affito.last)}</PopUpInfo>
+            <PopUpInfo title="elevation">{affito.elevation ? Math.ceil(affito.elevation) + 'm' : ''}</PopUpInfo>
 
             </SmallInfo>
 
@@ -98,47 +100,44 @@ function PopupContent({
                     );
                 })}
             </Photos>
-            {totalPages > 1 && (
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '10px',
-                    marginTop: '10px'
-                }}>
-                    <button
-                        onClick={goToPrevPage}
-                        disabled={currentPage === 0}
-                        style={{
-                            padding: '5px 10px',
-                            cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
-                            opacity: currentPage === 0 ? 0.5 : 1,
-                            border: '1px solid #1976d2',
-                            background: 'white',
-                            borderRadius: '4px'
-                        }}
-                    >
-                        ←
-                    </button>
-                    <span style={{ fontSize: '12px' }}>
-                        {currentPage + 1} / {totalPages}
-                    </span>
-                    <button
-                        onClick={goToNextPage}
-                        disabled={currentPage === totalPages - 1}
-                        style={{
-                            padding: '5px 10px',
-                            cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
-                            opacity: currentPage === totalPages - 1 ? 0.5 : 1,
-                            border: '1px solid #1976d2',
-                            background: 'white',
-                            borderRadius: '4px'
-                        }}
-                    >
-                        →
-                    </button>
-                </div>
-            )}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '10px' }}>
+                {totalPages > 1 ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                        <button
+                            onClick={goToPrevPage}
+                            disabled={currentPage === 0}
+                            style={{
+                                padding: '5px 10px',
+                                cursor: currentPage === 0 ? 'not-allowed' : 'pointer',
+                                opacity: currentPage === 0 ? 0.5 : 1,
+                                border: '1px solid #1976d2',
+                                background: 'white',
+                                borderRadius: '4px'
+                            }}
+                        >
+                            ←
+                        </button>
+                        <span style={{ fontSize: '12px' }}>
+                            {currentPage + 1} / {totalPages}
+                        </span>
+                        <button
+                            onClick={goToNextPage}
+                            disabled={currentPage === totalPages - 1}
+                            style={{
+                                padding: '5px 10px',
+                                cursor: currentPage === totalPages - 1 ? 'not-allowed' : 'pointer',
+                                opacity: currentPage === totalPages - 1 ? 0.5 : 1,
+                                border: '1px solid #1976d2',
+                                background: 'white',
+                                borderRadius: '4px'
+                            }}
+                        >
+                            →
+                        </button>
+                    </div>
+                ) : <div />}
+                <DescriptionEditor id={affito._id} description={affito.description} />
+            </div>
         </div>
     );
 }

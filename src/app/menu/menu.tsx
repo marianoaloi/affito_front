@@ -36,8 +36,8 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
     }
 
     const floor = searchParams.get("floor");
-    if (floor && Number(floor) !== filter.floor) {
-      newFilter.floor = Number(floor);
+    if (floor && floor !== filter.floor && (floor === 'Terra' || floor === 'Mezzo')) {
+      newFilter.floor = floor;
       hasChanges = true;
     }
 
@@ -129,13 +129,19 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
           onChange={e => handleChange('priceMax', e.target.value ? Number(e.target.value) : undefined)}
           size="small"
         />
-        <TextField
-          label="Floor"
-          type="number"
-          value={filter.floor || ''}
-          onChange={e => handleChange('floor', e.target.value ? Number(e.target.value) : undefined)}
-          size="small"
-        />
+        <FormControl size="small">
+          <InputLabel id="floor-label">Floor</InputLabel>
+          <Select
+            label="Floor"
+            type="number"
+            value={filter.floor || ''}
+            onChange={e => handleChange('floor', e.target.value ? e.target.value : undefined)}
+            size="small"
+          ><SelectItem value="">Any</SelectItem>
+            <SelectItem value="Terra">Terra</SelectItem>
+            <SelectItem value="Mezzo">No Terra</SelectItem>
+          </Select>
+        </FormControl>
         <TextField
           label="Agent name"
           type="text"

@@ -63,5 +63,25 @@ const setAffitoState = async (realEstateId: string | number, newState: number, t
     return response.json();
 };
 
-export { setAffitoState };
+export type returnAffitoDescription = {
+    success: boolean;
+    message: string;
+}
+
+const setDescription = async (realEstateId: string | number, description: string , token:string | undefined): Promise<returnAffitoDescription> => {
+    const response = await fetch(`${API_BASE_URL}/api/affito/${realEstateId}/setDescription`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ description: description }),
+    });
+    if (!response.ok) {
+        throw new Error('Failed to update affito description');
+    }
+    return response.json();
+};
+
+export { setAffitoState , setDescription };
 export default getAffiti;

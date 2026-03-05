@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { clearAffitoError, fetchAffito, updateAffitoState } from './affitoTrunk';
+import { clearAffitoError, fetchAffito, updateAffitoDescription, updateAffitoState } from './affitoTrunk';
 import { AffitoEntity } from '@/app/entity/AffitoEntity';
 
 interface AffitoState {
   data: AffitoEntity[];
-  loading: 'idle' | 'pending' | 'succeeded' | 'failed' | 'updateState';
+  loading: 'idle' | 'pending' | 'succeeded' | 'failed' | 'updateState' | 'updateDescription';
   error: string | null;
 }
 
@@ -57,6 +57,25 @@ const affitoSlice = createSlice({
         } else {
           state.loading = 'failed';
           state.error = !affito ? "Affito not found" : action.payload.message
+        }
+      })
+
+      .addCase(updateAffitoDescription.pending, (state) => {
+        state.loading = 'updateDescription';
+      })
+      .addCase(updateAffitoDescription.rejected, (state, action) => {
+        state.loading = 'failed';
+        state.error = action.error.message || 'An error occurred';
+      })
+      .addCase(updateAffitoDescription.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        const { realEstateId, description } = action.meta.arg;
+        const affito = state.data.find(a => a._id === realEstateId);
+        if (affito && action.payload.success) {
+          affito.description = description;
+        } else {
+          state.loading = 'failed';
+          state.error = !affito ? "Affito not found" : action.payload.message;
         }
       });
   },
