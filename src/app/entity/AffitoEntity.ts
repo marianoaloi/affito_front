@@ -13,6 +13,9 @@ export interface AffitoEntity {
   last?: Date;
   imobiliare?: Date;
   description?: string;
+
+  type: string;
+  
 }
 
 export interface RealEstate {

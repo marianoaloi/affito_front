@@ -130,10 +130,23 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
           size="small"
         />
         <FormControl size="small">
+          <InputLabel id="type-label">Type</InputLabel>
+          <Select
+            label="Type"
+            type="text"
+            value={filter.type || 'a'}
+            onChange={e => handleChange('type', e.target.value || undefined)}
+            size="small"
+          ><SelectItem value="a">Affito</SelectItem>
+            <SelectItem value="c">Compra</SelectItem>
+          </Select>
+        </FormControl>
+
+        <FormControl size="small">
           <InputLabel id="floor-label">Floor</InputLabel>
           <Select
             label="Floor"
-            type="number"
+            type="text"
             value={filter.floor || ''}
             onChange={e => handleChange('floor', e.target.value ? e.target.value : undefined)}
             size="small"

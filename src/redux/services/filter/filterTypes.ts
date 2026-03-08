@@ -12,4 +12,6 @@ export interface FilterAffito {
 
   paginationSize?: number;
 
+  type: 'a' | 'c' ;
+
 } 
