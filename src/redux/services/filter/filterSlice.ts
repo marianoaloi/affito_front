@@ -15,10 +15,14 @@ function getInitialFilter(): FilterAffito {
     try {
       return JSON.parse(cookie);
     } catch {
-      return {};
+      return {
+        type: "a"
+      };
     }
   }
-  return {};
+  return {
+    type: "a"
+  };
 }
 
 const initialState: FilterState = {

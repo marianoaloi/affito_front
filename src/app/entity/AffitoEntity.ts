@@ -14,7 +14,7 @@ export interface AffitoEntity {
   imobiliare?: Date;
   description?: string;
 
-  type: string;
+  type: 'a' | 'c';
   
 }
 

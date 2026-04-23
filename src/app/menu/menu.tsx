@@ -81,6 +81,15 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
       hasChanges = true;
     }
 
+    const type = searchParams.get("type");
+    if (type && type !== filter.type) {
+      if (type === "a" || type === "c") {
+        newFilter.type = type;
+        hasChanges = true;
+      }
+    }
+
+
     if (hasChanges) {
       dispatch(setFilterAffito(newFilter));
     }
@@ -98,6 +107,8 @@ export default function MenuAffito({ filterAnchorEl, handleFilterClose }: MenuAf
     if (filter.stateMaloi !== undefined) params.set("stateMaloi", filter.stateMaloi.toString());
     if (filter.province) params.set("province", filter.province);
     if (filter.accessoDisabili !== undefined) params.set("accessoDisabili", filter.accessoDisabili.toString());
+    if (filter.type) params.set("type", filter.type);
+
 
     const newSearch = params.toString();
     const currentSearch = searchParams.toString();

@@ -7,16 +7,23 @@ import { StatisticsChartPageProps } from "./StatisticsCharPageProps";
 interface DisabiliStats {
 
     province: string;
+    type: 'a' | 'c';
     si: number;
     no: number;
     empty: number;
 
 }
 
+interface DisabiliKeys {
+    province : string;
+    type : 'a' | 'c';
+}
+
 
 const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: DisabiliStats[], normalize: boolean }) => {
 
     const provinces = aggregatedData.map(d => d.province);
+    const type = aggregatedData.map(d => d.type === `a` ? `Affito ${d.province}` : d.type === `c` ? `Comprato ${d.province}` : `Senza Info ${d.province}`);
     let siData = aggregatedData.map(d => d.si);
     let noData = aggregatedData.map(d => d.no);
     let emptyData = aggregatedData.map(d => d.empty);
@@ -38,7 +45,7 @@ const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: Disab
                 xAxis={[
                     {
                         scaleType: 'band',
-                        data: provinces,
+                        data: type,
                         label: 'Province'
                     }
                 ]}
@@ -86,10 +93,13 @@ export default function AccessoDisabiliStatisticsChartPage({ affiti }: Statistic
 
         affiti.forEach((affito) => {
             const province = affito.realEstate.properties?.location?.province || 'Unknown';
+            const type = affito.type;
+            const key = `${province}-${type}`;
 
-            if (!disable[province]) {
-                disable[province] = {
+            if (!disable[key]) {
+                disable[key] = {
                     province,
+                    type: affito.type,
                     si: 0,
                     no: 0,
                     empty: 0
@@ -97,7 +107,7 @@ export default function AccessoDisabiliStatisticsChartPage({ affiti }: Statistic
             }
             const accessoDisabili = affito.realEstate.properties?.primaryFeatures?.find(f => f.name.toUpperCase() === "ACCESSO PER DISABILI")
 
-            const fieldProvince = disable[province];
+            const fieldProvince = disable[key];
             if (accessoDisabili) {
                 if (accessoDisabili.value == 1) {
                     fieldProvince.si += 1;
