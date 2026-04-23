@@ -2,11 +2,11 @@
 import { ReactNode, useEffect, useState, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from "react-leaflet";
 import L, { icon } from "leaflet";
-import { MarkerPopup, PhotoPreview, PhotoPreviewOverlay, LuogoMap, QtdMap } from "./UdineMapComponent.styled";
+import { PhotoPreview, PhotoPreviewOverlay } from "./UdineMapComponent.styled";
+import FilterMap from "./filterMap";
 import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition, getFilter, FilterAffito, setFilterAffito } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import './UdineMapComponent.css'
-import { defaultMapStateExport, triesteMapStateExport } from "@/redux/services/map/mapSlice";
 import PopupContent from "./PopupMapComponent";
 
 
@@ -190,7 +190,6 @@ export default function UdineMapComponent() {
         dispatch(setFilterAffito({ ...filter, [field]: value }));
     }
 
-    const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures?.find(f => f.type == 'elevator')?.compactLabel)
 
 
     return (
@@ -205,39 +204,12 @@ export default function UdineMapComponent() {
                     <PhotoPreview src={hoveredPhoto.url} alt="Enlarged preview" />
                 </PhotoPreviewOverlay>
             )}
-            <MarkerPopup>
-                {/* <div><strong>Lat:</strong> {mapState.latitude?.toFixed(6)}</div>
-                <div><strong>Lng:</strong> {mapState.longitude?.toFixed(6)}</div>
-                <div><strong>Zoom:</strong> {mapState.zoom}</div> */}
-                <QtdMap>
-                    <strong>Elevator:</strong>
-                    <span className={filter.elevator == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", undefined)}>{affiti.length}</span>
-                    <span className={filter.elevator == "No" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "No")}>{elevatorCount.filter(a => a == "No").length}</span>
-                    <span className={filter.elevator == "Sì" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "Sì")}>{elevatorCount.filter(a => a == "Sì").length}</span>
-                    <span className={filter.elevator == "empty" ? "borderSelected" : ""} onClick={() => changeFilterStatus("elevator", "empty")}>{elevatorCount.filter(a => !a).length}</span>
-                </QtdMap>
-                <QtdMap>
-                    <strong>Accept:</strong>
-                    <span className={filter.stateMaloi == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", undefined)}>{affiti.length}</span>
-                    <span className={filter.stateMaloi == 0 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 0)}>{affiti.filter(a => a.stateMaloi == 0).length}</span>
-                    <span className={filter.stateMaloi == 1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", 1)}>{affiti.filter(a => a.stateMaloi == 1).length}</span>
-                    <span className={filter.stateMaloi == -1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("stateMaloi", -1)}>{affiti.filter(a => undefined == a.stateMaloi).length}</span>
-                    <div >
-                        <span>Terra</span>
-                        <input type="checkbox" checked={filter.floor === 'Terra'} onChange={(ev) => changeFilterStatus('floor',ev.target.checked ? 'Terra' : undefined)}></input>
-                    </div>
-                </QtdMap>
-                <LuogoMap>
-                    <span className={filter.province == 'Udine' ? "borderSelected" : ""} onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
-                    <span className={filter.province == 'Trieste' ? "borderSelected" : ""} onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
-                    <div>
-                        <span className={filter.accessoDisabili == undefined ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  undefined)}>⚫️</span>
-                        <span className={filter.accessoDisabili == 0 ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  0)}>❌</span>
-                        <span className={filter.accessoDisabili == 1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  1)}>♿</span>
-                        <span className={filter.accessoDisabili == -1 ? "borderSelected" : ""} onClick={() => changeFilterStatus("accessoDisabili",  -1)}>🟡</span>
-                    </div>
-                </LuogoMap>
-            </MarkerPopup>
+            <FilterMap
+                affiti={affiti}
+                filter={filter}
+                changeFilterStatus={changeFilterStatus}
+                changeMap={changeMap}
+            />
             <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>
                 <MapEventHandler />
                 <MapPositionUpdater mapRef={mapRef} />
