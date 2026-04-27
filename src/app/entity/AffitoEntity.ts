@@ -35,6 +35,10 @@ export interface RealEstate {
   // hasMainProperty: boolean;
   // isProjectLike: boolean;
   // isMosaic: boolean;
+  updatedAt?: Date;
+  createdAt?: Date;
+  contractValue: number;
+
   
 }
 

@@ -14,7 +14,7 @@ interface FilterMapProps {
 }
 
 export default function FilterMap({ affiti, filter, changeFilterStatus, changeMap }: FilterMapProps) {
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
     const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures?.find(f => f.type === "elevator")?.compactLabel);
 
     return (

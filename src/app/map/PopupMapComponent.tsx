@@ -3,7 +3,7 @@ import ChoiceState from "../component/ChoiceState";
 import DescriptionEditor from "../component/DescriptionEditor";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import { Photo, Photos, PopUpInfo, SmallInfo, TopActionLink } from "./UdineMapComponent.styled";
-import { timeAgo } from "../util/timeAgo";
+import { dataImportance, timeAgo } from "../util/timeAgo";
 
 
 function PopupContent({
@@ -76,10 +76,11 @@ function PopupContent({
             <PopUpInfo title="m²">{getMainFeaturesPropertie('surface')}</PopUpInfo>
             <PopUpInfo title="Disable">{getPrimaryFeaturesPropertie('Accesso per disabili')}</PopUpInfo>
             
-            <PopUpInfo title="Create">{timeAgo(affito.create)}</PopUpInfo>
+            <PopUpInfo title={`create ${dataImportance(affito.create)} ${dataImportance(affito.realEstate.createdAt)}`}>{timeAgo(affito.create)}[{timeAgo(affito.realEstate.createdAt)}]</PopUpInfo>
             <PopUpInfo title="Imobiliare">{timeAgo(affito.imobiliare)}</PopUpInfo>
-            <PopUpInfo title="Last">{timeAgo(affito.last)}</PopUpInfo>
+            <PopUpInfo title={`last ${dataImportance(affito.last)} ${dataImportance(affito.realEstate.updatedAt)}`}>{timeAgo(affito.last)}[{timeAgo(affito.realEstate.updatedAt)}]</PopUpInfo>
             <PopUpInfo title="elevation">{affito.elevation ? Math.ceil(affito.elevation) + 'm' : ''}</PopUpInfo>
+            <PopUpInfo title="contract">{affito.realEstate.contractValue}</PopUpInfo>
 
             </SmallInfo>
 
