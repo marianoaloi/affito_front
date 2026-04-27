@@ -55,9 +55,7 @@ export default function RootLayout({
               <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuOpen}>
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Affito App
-              </Typography>
+              <img src="/affitto-maloi.svg" alt="logo" />
               <IconButton color="inherit" aria-label="filter" onClick={handleFilterOpen}>
                 <FilterListIcon />
               </IconButton>

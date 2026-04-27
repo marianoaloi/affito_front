@@ -6,7 +6,6 @@ import { PhotoPreview, PhotoPreviewOverlay } from "./UdineMapComponent.styled";
 import FilterMap from "./filterMap";
 import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition, getFilter, FilterAffito, setFilterAffito } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
-import './UdineMapComponent.css'
 import PopupContent from "./PopupMapComponent";
 
 
@@ -52,11 +51,11 @@ function MapPositionUpdater({ mapRef }: { mapRef: React.MutableRefObject<L.Map |
 function affitoDataBase(
     affito: AffitoEntity,
     onMouseEnter: (photoUrl: string, event: React.MouseEvent<HTMLImageElement>) => void,
-    onMouseLeave: () => void ,
+    onMouseLeave: () => void,
     handleMouseLeave: () => void
 ): ReactNode {
     const propt = affito.realEstate.properties;
-    if(!propt){
+    if (!propt) {
         console.log(affito.realEstate.title)
         return null;
     }
@@ -97,15 +96,34 @@ function affitoDataBase(
 }
 
 
+
+
 export default function UdineMapComponent() {
 
 
     const dispatch = useDispatch();
     const mapRef = useRef<L.Map | null>(null);
 
-    const affiti = useSelector(selectAllAffito);
-    const mapState = useSelector(selectMapPosition);
     const filter = useSelector(getFilter) as FilterAffito;
+    const filterResidencesByFilter = (affito: AffitoEntity) => {
+        const propt = affito.realEstate?.properties
+        const mainFeature = propt?.mainFeatures
+
+        const condicao =  (filter.stateMaloi === undefined || ( filter.stateMaloi === -1 && affito.stateMaloi === undefined) || affito.stateMaloi === filter.stateMaloi)
+            &&
+            (filter.elevator === undefined || (filter.elevator === "empty" && !mainFeature?.find(f => f.type === "elevator")) || filter.elevator === mainFeature?.find(f => f.type === "elevator")?.compactLabel) 
+            &&
+            (filter.accessoDisabili === undefined || (filter.accessoDisabili === -1 && propt?.primaryFeatures?.find(f => f.name === "Accesso per disabili")?.value === undefined) || filter.accessoDisabili === propt?.primaryFeatures?.find(f => f.name === "Accesso per disabili")?.value)
+            &&
+            (filter.floor === undefined || (filter.floor === "Terra" && propt.floor?.abbreviation?.toUpperCase().includes("T") ) || (filter.floor === "Mezzo" && !propt.floor?.abbreviation.toUpperCase().includes("T") ) )
+          
+
+        return condicao
+           
+
+    }
+    const affiti = useSelector(selectAllAffito).filter(filterResidencesByFilter);
+    const mapState = useSelector(selectMapPosition);
     const [affitiInMap, setAffitiInMap] = useState<ReactNode[]>([]);
     const [hoveredPhoto, setHoveredPhoto] = useState<{ url: string; x: number; y: number } | null>(null);
 
@@ -123,7 +141,7 @@ export default function UdineMapComponent() {
     };
 
     useEffect(() => {
-        const affitiAux = affiti.map((affito) => affitoDataBase(affito, handleMouseEnter, handleMouseLeave,handleMouseLeave));
+        const affitiAux = affiti.map((affito) => affitoDataBase(affito, handleMouseEnter, handleMouseLeave, handleMouseLeave));
         const meIcon = L.divIcon(
             {
                 html: '<i class="fas fa-map-marker-alt" style="    font-size: 2em;    margin-top: -0.6em;    margin-left: -0.6em;    position: absolute;">🫵</i>',
@@ -217,7 +235,7 @@ export default function UdineMapComponent() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                { affitiInMap}
+                {affitiInMap}
             </MapContainer>
         </div>
     );
