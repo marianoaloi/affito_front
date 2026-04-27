@@ -2,7 +2,7 @@
 import { useState } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { QtdMap, LuogoMap, MarkerPopup } from "./UdineMapComponent.styled";
-import { FilterAffito } from "@/redux";
+import { FilterAffito, useSelector } from "@/redux";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import { defaultMapStateExport, triesteMapStateExport } from "@/redux/services/map/mapSlice";
 
@@ -17,9 +17,30 @@ export default function FilterMap({ affiti, filter, changeFilterStatus, changeMa
     const [open, setOpen] = useState(true);
     const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures?.find(f => f.type === "elevator")?.compactLabel);
 
+    const counters = useSelector(state => state.counter).data.filter(count => count._id.province === filter.province && count._id.type === filter.type)
+
+    const CounterElement = () => {
+        return (
+            <div>
+                {counters.map(counter => (
+                    <QtdMap key={counter._id.province + counter._id.type}>
+                        <strong>{counter._id.type === 'a' ? 'Affito' : 'Compra'} in {counter._id.province} : </strong>
+                        <span>{counter.total} </span>
+                        <span style={{ backgroundColor: "#ffffff", color: "black", border: "1px solid black" }} >♿{counter.disable} </span>
+                        <span style={{ backgroundColor: "#1976d2" }}>{counter.emptyChoise}</span>
+                    </QtdMap>)
+
+                )
+                }
+            </div>
+        )
+    }
+
+
     return (
         <MarkerPopup>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <CounterElement />
                 <MenuIcon
                     onClick={() => setOpen(prev => !prev)}
                     style={{ cursor: "pointer", fontSize: 20 }}
@@ -59,12 +80,12 @@ export default function FilterMap({ affiti, filter, changeFilterStatus, changeMa
                     <LuogoMap>
                         <span className={filter.province == "Udine" ? "borderSelected" : ""} onClick={() => changeMap(defaultMapStateExport)}>Udine</span>
                         <span className={filter.province == "Trieste" ? "borderSelected" : ""} onClick={() => changeMap(triesteMapStateExport)}>Trieste</span>
-                        
+
                     </LuogoMap>
                     <LuogoMap>
                         <span className={filter.type == "a" ? "borderSelected" : ""} onClick={() => changeFilterStatus("type", 'a')}>Affito</span>
                         <span className={filter.type == "c" ? "borderSelected" : ""} onClick={() => changeFilterStatus("type", 'c')}>Compra</span>
-                        
+
                     </LuogoMap>
                 </>
             )}
