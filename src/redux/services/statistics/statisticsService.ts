@@ -1,6 +1,6 @@
 import { AffitoEntity } from "@/app/entity/AffitoEntity";
+import { API_BASE_URL } from "../BaseURL";
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://us-central1-affitiudine.cloudfunctions.net/api' : 'http://localhost:5088';
 
 function wait(delay: number) {
     return new Promise((resolve) => setTimeout(resolve, delay));

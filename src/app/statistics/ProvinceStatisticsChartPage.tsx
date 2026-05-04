@@ -6,7 +6,7 @@ import { StatisticsChartPageProps } from "./StatisticsCharPageProps";
 
 
 interface ProvinceStats {
-    province: string;
+    key: string;
     approved: number;
     waiting: number;
     denied: number;
@@ -15,7 +15,8 @@ interface ProvinceStats {
 
 const BarChartProvince = ({aggregatedData,normalize} : {aggregatedData : ProvinceStats[],normalize : boolean}) => {
     
-    const provinces = aggregatedData.map(d => d.province);
+    const type = aggregatedData.map(d => 
+        d.key);
     let approvedData = aggregatedData.map(d => d.approved);
     let waitingData = aggregatedData.map(d => d.waiting);
     let deniedData = aggregatedData.map(d => d.denied);
@@ -40,7 +41,7 @@ const BarChartProvince = ({aggregatedData,normalize} : {aggregatedData : Provinc
                     xAxis={[
                         {
                             scaleType: 'band',
-                            data: provinces,
+                            data: type,
                             label: 'Province'
                         }
                     ]}
@@ -94,11 +95,13 @@ export default function ProvinceStatisticsChartPage({ affiti }: StatisticsChartP
 
         affiti.forEach(affito => {
             const province = affito.realEstate.properties?.location?.province || 'Unknown';
+            const type = affito.type === "a" ? "Aff" : "Com";
+            const key = `${province}-${type}`;
             const state = affito.stateMaloi;
 
-            if (!provinceStatsMap[province]) {
-                provinceStatsMap[province] = {
-                    province,
+            if (!provinceStatsMap[key]) {
+                provinceStatsMap[key] = {
+                    key,
                     approved: 0,
                     waiting: 0,
                     denied: 0,
@@ -106,14 +109,15 @@ export default function ProvinceStatisticsChartPage({ affiti }: StatisticsChartP
                 };
             }
 
+            const fieldProvince = provinceStatsMap[key];
             if (state === 1) {
-                provinceStatsMap[province].approved++;
+                fieldProvince.approved++;
             } else if (state === 2) {
-                provinceStatsMap[province].waiting++;
+                fieldProvince.waiting++;
             } else if (state === 0) {
-                provinceStatsMap[province].denied++;
+                fieldProvince.denied++;
             } else {
-                provinceStatsMap[province].empty++;
+                fieldProvince.empty++;
             }
         });
 

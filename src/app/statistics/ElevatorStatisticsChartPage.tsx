@@ -7,7 +7,7 @@ import { StatisticsChartPageProps } from "./StatisticsCharPageProps";
 
 interface ElevatorStats {
 
-    province: string;
+    key: string;
     si: number;
     no: number;
     empty: number;
@@ -16,7 +16,7 @@ interface ElevatorStats {
 
 const BarChartElevator = ({aggregatedData,normalize} : {aggregatedData : ElevatorStats[],normalize : boolean}) => {
     
-    const provinces = aggregatedData.map(d => d.province);
+    const keys = aggregatedData.map(d => d.key);
     let siData = aggregatedData.map(d => d.si);
     let noData = aggregatedData.map(d => d.no);
     let emptyData = aggregatedData.map(d => d.empty);
@@ -37,7 +37,7 @@ const BarChartElevator = ({aggregatedData,normalize} : {aggregatedData : Elevato
                     xAxis={[
                         {
                             scaleType: 'band',
-                            data: provinces,
+                            data: keys,
                             label: 'Province'
                         }
                     ]}
@@ -83,27 +83,26 @@ export default function ElevatorStatisticsChartPage({ affiti }: StatisticsChartP
     const aggregatedData = useMemo(() => {
         const ElevatorStatsMap: Record<string, ElevatorStats> = {};
 
-        const elevatorCount = affiti.map(a => {
-            if (!a.realEstate.properties || !a.realEstate.properties.mainFeatures) {
-                return { elevator: 'niente', province: "niente" };
-            }
-            const elevator = a.realEstate.properties.mainFeatures.find(f => f.type == 'elevator')?.compactLabel || 'Senza Info';
-            return {
-                elevator: elevator,
-                province: a.realEstate.properties.location.province
-            };
-        });
+        affiti.forEach(a => {
 
-        elevatorCount.forEach(({ elevator, province }) => {
-            if (!ElevatorStatsMap[province]) {
-                ElevatorStatsMap[province] = { province, si: 0, no: 0, empty: 0 };
-            }
+            const elevator = a.realEstate?.properties?.mainFeatures?.find(f => f.type == 'elevator')?.compactLabel || 'Senza Info';
+            
+            const province = a.realEstate.properties?.location?.province || 'Unknown';
+            const type = a.type === "a" ? "Aff" : "Com";
+            const key = `${province}-${type}`;
+            
+ 
+            if(!ElevatorStatsMap[key])
+                ElevatorStatsMap[key] = { key, si: 0, no: 0, empty: 0 };
+            
+            const ele = ElevatorStatsMap[key] ;
+            
             if (elevator === 'Sì') {
-                ElevatorStatsMap[province].si += 1;
+                ele.si += 1;
             } else if (elevator === 'No') {
-                ElevatorStatsMap[province].no += 1;
+                ele.no += 1;
             } else {
-                ElevatorStatsMap[province].empty += 1;
+                ele.empty += 1;
             }
         });
 

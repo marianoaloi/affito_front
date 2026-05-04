@@ -2,13 +2,15 @@
 import FeaturesTablePage from "./FeaturesTablePage";
 import { fetchAffito, getFilter, useDispatch, useSelector } from "@/redux";
 import { selectAllAffito } from "@/redux/services/affito/affitoSelectors";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Loading } from "../component/LoadingError";
+import { filterResidencesByFilter } from "../util/filterAffitti";
 
 export default function Table() {
     const dispatch = useDispatch();
-    const affiti = useSelector(selectAllAffito);
-    const filter = useSelector(getFilter)
+        const allAffiti = useSelector(selectAllAffito);
+    const filter = useSelector(getFilter);
+    const affiti = useMemo(() => allAffiti.filter(a => filterResidencesByFilter(a, filter)), [allAffiti, filter]);
     useEffect(() => {
         dispatch(fetchAffito(filter));
     }, [dispatch, filter]);

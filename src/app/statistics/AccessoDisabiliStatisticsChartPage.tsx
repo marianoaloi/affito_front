@@ -6,24 +6,19 @@ import { StatisticsChartPageProps } from "./StatisticsCharPageProps";
 
 interface DisabiliStats {
 
-    province: string;
-    type: 'a' | 'c';
+    key: string;
     si: number;
     no: number;
     empty: number;
 
 }
 
-interface DisabiliKeys {
-    province : string;
-    type : 'a' | 'c';
-}
 
 
 const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: DisabiliStats[], normalize: boolean }) => {
 
-    const provinces = aggregatedData.map(d => d.province);
-    const type = aggregatedData.map(d => d.type === `a` ? `Affito ${d.province}` : d.type === `c` ? `Comprato ${d.province}` : `Senza Info ${d.province}`);
+    const type = aggregatedData.map(d => 
+        d.key);
     let siData = aggregatedData.map(d => d.si);
     let noData = aggregatedData.map(d => d.no);
     let emptyData = aggregatedData.map(d => d.empty);
@@ -93,13 +88,12 @@ export default function AccessoDisabiliStatisticsChartPage({ affiti }: Statistic
 
         affiti.forEach((affito) => {
             const province = affito.realEstate.properties?.location?.province || 'Unknown';
-            const type = affito.type;
+            const type = affito.type === "a" ? "Aff" : "Com";
             const key = `${province}-${type}`;
 
             if (!disable[key]) {
                 disable[key] = {
-                    province,
-                    type: affito.type,
+                    key,
                     si: 0,
                     no: 0,
                     empty: 0

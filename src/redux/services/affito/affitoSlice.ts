@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { clearAffitoError, fetchAffito, updateAffitoDescription, updateAffitoState } from './affitoTrunk';
+import { clearAffitoError, fetchAffito, updateAffitoDescription, updateAffitoState, updateManyAffitoState } from './affitoTrunk';
 import { AffitoEntity } from '@/app/entity/AffitoEntity';
 
 interface AffitoState {
@@ -77,7 +77,26 @@ const affitoSlice = createSlice({
           state.loading = 'failed';
           state.error = !affito ? "Affito not found" : action.payload.message;
         }
-      });
+      })
+
+      .addCase(updateManyAffitoState.pending, (state) => {
+        state.loading = 'updateState';
+      })
+      .addCase(updateManyAffitoState.rejected, (state, action) => {
+        state.loading = 'failed'
+        state.error = action.error.message || 'An error occurred';
+      })
+      .addCase(updateManyAffitoState.fulfilled, (state, action) => {
+        state.loading = 'succeeded';
+        action.payload.ids.forEach((id: number) => {
+          const affito = state.data.find(a => a._id === id);
+          if (affito) {
+            affito.stateMaloi = action.payload.state;
+          }
+        });
+      })
+
+
   },
 });
 

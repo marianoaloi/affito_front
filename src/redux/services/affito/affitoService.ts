@@ -1,7 +1,8 @@
 import { AffitoEntity } from "@/app/entity/AffitoEntity";
 import { FilterAffito } from "../filter/filterTypes";
+import { API_BASE_URL } from "../BaseURL";
 
-const API_BASE_URL = process.env.NODE_ENV === 'production' ? 'https://us-central1-affitiudine.cloudfunctions.net/api' : 'http://localhost:5088';
+
 // 'https://us-central1-affitiudine.cloudfunctions.net/api';
 console.log(process.env.NODE_ENV)
 
@@ -48,8 +49,30 @@ export type returnAffitoState = {
     message: string;
 }
 
+const setManyAffitoState = async (realEstateIds: number[], newState: number, token: string | undefined): Promise<{ids:number[],state:number}> => {
+    const responses = await fetchRetry(`${API_BASE_URL}/api/affito/bulk/state`,10_000,5, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ realEstateIds: realEstateIds, stateMaloi: newState }),
+    });
+    if (!responses.ok) {
+        throw new Error('Failed to update affito state');
+    }
+    const data = await responses.json();
+    if(data.data.modifiedCount > 0)
+        return {ids:realEstateIds,state:newState}
+    else{
+        throw new Error('Failed to update affito state');
+    }
+    
+};
+
+
 const setAffitoState = async (realEstateId: string | number, newState: number, token: string | undefined): Promise<returnAffitoState> => {
-    const response = await fetch(`${API_BASE_URL}/api/affito/${realEstateId}/state`, {
+    const response = await fetchRetry(`${API_BASE_URL}/api/affito/${realEstateId}/state`,10_000,5, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -83,5 +106,5 @@ const setDescription = async (realEstateId: string | number, description: string
     return response.json();
 };
 
-export { setAffitoState , setDescription };
+export { setAffitoState , setDescription , setManyAffitoState , getAffiti};
 export default getAffiti;

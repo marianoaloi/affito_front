@@ -5,14 +5,37 @@ import { EditNote, Save } from '@mui/icons-material';
 import { updateAffitoDescription } from '@/redux/services/affito/affitoTrunk';
 import { useDispatch } from '@/redux/store';
 import { useAuth } from '../menu/AuthContext';
+import styled from '@emotion/styled'
 
 interface DescriptionEditorProps {
   id: number;
   description?: string;
 }
 
+const PreDescription = styled.div`
+overflow-wrap: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100px;
+    `
+
+const DescriptionBox = styled.div`
+  display: flex;
+  flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+    align-items: center;
+    background: #fff2aa;
+    padding: 5px;
+    position: relative;
+    top: 10px;
+    left: 10px;
+    border-radius: 5px;
+`   
+
 const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ id, description }) => {
-  const [open, setOpen] = useState(false);
+  const [openDescription, setOpenDescription] = useState(false);
   const [value, setValue] = useState(description || '');
   const dispatch = useDispatch();
   const { getAuthToken } = useAuth();
@@ -21,18 +44,21 @@ const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ id, description }
     const token = await getAuthToken();
     if (!token) return;
     dispatch(updateAffitoDescription({ realEstateId: id, description: value, token }));
-    setOpen(false);
+    setOpenDescription(false);
   };
+
+
 
   return (
     <Stack direction="row" spacing={1} alignItems="center">
-      <Tooltip title={open ? 'Hide description' : 'Edit description'}>
-        <IconButton size="small" onClick={() => setOpen(prev => !prev)} color={open ? 'primary' : 'default'}>
+      <Tooltip title={openDescription ? 'Hide description' : 'Edit description'}>
+        <IconButton size="small" onClick={() => setOpenDescription(prev => !prev)} color={openDescription ? 'primary' : 'default'}>
           <EditNote />
         </IconButton>
       </Tooltip>
-      {open && (
-        <>
+      {(!openDescription && value && (value.length > 0)) ? <PreDescription >{value}</PreDescription> : ""}
+      {openDescription && (
+        <DescriptionBox>
           <TextField
             size="small"
             value={value}
@@ -47,7 +73,7 @@ const DescriptionEditor: React.FC<DescriptionEditorProps> = ({ id, description }
               <Save />
             </IconButton>
           </Tooltip>
-        </>
+        </DescriptionBox>
       )}
     </Stack>
   );

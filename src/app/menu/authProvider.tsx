@@ -18,13 +18,13 @@ const { user, loading: authLoading, signInWithGoogle, logout } = useAuth();
         <>
             {user ? (
                 <Button variant="contained" color="secondary" onClick={logout}>
-                    Logout{" "}
-                    {user.photoURL && (
+                  
+                    {user.photoURL ? (
                         <ThumbPhoto
                             src={user.photoURL}
                             alt="User Avatar"
                         />
-                    )}
+                    ) : user.displayName ? user.displayName : "Logout"}
                 </Button>
             ) : (
                 <Button variant="contained" color="primary" onClick={signInWithGoogle}>
