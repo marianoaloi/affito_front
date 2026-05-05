@@ -57,15 +57,15 @@ const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: Disab
                         stack: 'status'
                     },
                     {
-                        data: noData,
-                        label: 'No',
-                        color: '#f44336',
-                        stack: 'status'
-                    },
-                    {
                         data: emptyData,
                         label: 'Senza Info',
                         color: '#9e9e9e',
+                        stack: 'status'
+                    },
+                    {
+                        data: noData,
+                        label: 'No',
+                        color: '#f44336',
                         stack: 'status'
                     }
                 ]}

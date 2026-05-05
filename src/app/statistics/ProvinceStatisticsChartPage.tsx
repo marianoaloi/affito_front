@@ -58,6 +58,12 @@ const BarChartProvince = ({aggregatedData,normalize} : {aggregatedData : Provinc
                             stack: 'status'
                         },
                         {
+                            data: emptyData,
+                            label: 'Empty',
+                            color: '#9e9e9e',
+                            stack: 'status'
+                        },
+                        {
                             data: waitingData,
                             label: 'Waiting',
                             color: '#ff9800',
@@ -67,12 +73,6 @@ const BarChartProvince = ({aggregatedData,normalize} : {aggregatedData : Provinc
                             data: deniedData,
                             label: 'Denied',
                             color: '#f44336',
-                            stack: 'status'
-                        },
-                        {
-                            data: emptyData,
-                            label: 'Empty',
-                            color: '#9e9e9e',
                             stack: 'status'
                         }
                     ]}

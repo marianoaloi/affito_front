@@ -55,7 +55,7 @@ export default function RootLayout({
               <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleMenuOpen}>
                 <MenuIcon />
               </IconButton>
-              <img style={{    height: "65px"}} src="/affitto-maloi.svg" alt="logo" />
+              <span>Affitto</span>
               <span style={{    width: "100%"}}/>
               <IconButton color="inherit" aria-label="filter" onClick={handleFilterOpen}>
                 <FilterListIcon />
