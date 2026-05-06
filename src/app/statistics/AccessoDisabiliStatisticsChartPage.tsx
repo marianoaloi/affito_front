@@ -1,7 +1,7 @@
 "use client";
 import { BarChart } from "@mui/x-charts/BarChart";
 import { useMemo } from "react";
-import { StyledContainer, StyledTitle, StyledSubtitle, StyledChartBox, BarRowComponent } from "./StatisticsChartPage.styled";
+import { StyledContainer, StyledTitle, StyledSubtitle, StyledChartBox, BarRowComponent, GraphySize } from "./StatisticsChartPage.styled";
 import { StatisticsChartPageProps } from "./StatisticsCharPageProps";
 
 interface DisabiliStats {
@@ -35,7 +35,7 @@ const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: Disab
 
 
     return (
-        <StyledChartBox>
+        <StyledChartBox className={ normalize ? 'perc' : 'Count' }>
             <BarChart
                 xAxis={[
                     {
@@ -70,7 +70,7 @@ const BarChartElevator = ({ aggregatedData, normalize }: { aggregatedData: Disab
                     }
                 ]}
                 height={500}
-                margin={{ top: 50, right: 50, bottom: 80, left: 80 }}
+                margin={GraphySize}
                 slotProps={{
                     legend: {
                         direction: 'horizontal',
