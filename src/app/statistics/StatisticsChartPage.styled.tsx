@@ -44,11 +44,37 @@ export const TotalBox = styled.div`
         padding-right: 24px;
     }
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
 `;
 
-export const TotalItem = styled.span` 
+export const TotalItem = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #f5f5f5;
+    border-radius: 8px;
+    padding: 8px 16px;
+    min-width: 80px;
+    gap: 2px;
+`;
 
+export const TotalItemProvince = styled.span`
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #333;
+`;
+
+export const TotalItemType = styled.span`
+    font-size: 0.72rem;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+`;
+
+export const TotalItemCount = styled.span`
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1976d2;
 `;
 
 export const GraphySize = { top: 10, right: 50, bottom: 80, left: 10 }
