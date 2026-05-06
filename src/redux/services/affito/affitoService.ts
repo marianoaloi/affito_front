@@ -80,10 +80,11 @@ const setAffitoState = async (realEstateId: string | number, newState: number, t
         },
         body: JSON.stringify({ stateMaloi: newState }),
     });
+    const body = await response.json();
     if (!response.ok) {
-        throw new Error('Failed to update affito state');
+        throw new Error(body? body.error : 'Failed to update affito state');
     }
-    return response.json();
+    return body;
 };
 
 export type returnAffitoDescription = {

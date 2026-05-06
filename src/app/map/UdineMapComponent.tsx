@@ -5,6 +5,7 @@ import L, { icon } from "leaflet";
 import { PhotoPreview, PhotoPreviewOverlay } from "./UdineMapComponent.styled";
 import FilterMap from "./filterMap";
 import { selectAllAffito, useSelector, useDispatch, mapActions, selectMapPosition, getFilter, FilterAffito, setFilterAffito, setManyAffitoState, updateManyAffitoState } from "@/redux";
+import AffitoErrorSnackbar from "../component/AffitoErrorSnackbar";
 import { AffitoEntity } from "../entity/AffitoEntity";
 import PopupContent from "./PopupMapComponent";
 import { useAuth } from "../menu/AuthContext";
@@ -220,6 +221,7 @@ export default function UdineMapComponent() {
 
     return (
         <div style={{ height: "100vh", width: "100%" }}>
+            <AffitoErrorSnackbar />
             {hoveredPhoto && (
                 <PhotoPreviewOverlay
                     style={{

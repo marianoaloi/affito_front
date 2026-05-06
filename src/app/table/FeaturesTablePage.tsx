@@ -1,11 +1,11 @@
 "use client"
 import React, { useState } from 'react';
 import { Alert, AlertTitle, Box } from '@mui/material';
+import AffitoErrorSnackbar from '../component/AffitoErrorSnackbar';
 
 
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { clearAffitoError } from '@/redux/services/affito/affitoTrunk';
-import { FilterAffito, getErrorAffito, getFilter, setFilterAffito, useDispatch, useSelector } from '@/redux';
+import { FilterAffito, getFilter, setFilterAffito, useDispatch, useSelector } from '@/redux';
 import { AffitiPageProps } from '../entity/AffitiPageProps';
 import ChoiceState from '../component/ChoiceState';
 import DescriptionEditor from '../component/DescriptionEditor';
@@ -15,7 +15,6 @@ import { timeAgo } from '../util/timeAgo';
 const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
   const coluns = new Set<string>();
   const dispatch = useDispatch();
-  const errorMSG = useSelector(getErrorAffito)
   const [errorTable, setError] = useState<string | undefined>(undefined);
   const filter = useSelector(getFilter) as FilterAffito;
 
@@ -104,12 +103,7 @@ const FeaturesTablePage: React.FC<AffitiPageProps> = ({ affiti }) => {
 
   return (
     <>
-      {errorMSG ?
-        <Alert severity='error' onClose={() => { dispatch(clearAffitoError()) }} >
-          <AlertTitle>Error</AlertTitle>
-          {errorMSG}
-        </Alert>
-        : ''}
+      <AffitoErrorSnackbar />
       {errorTable ?
         <Alert severity='error' onClose={() => { setError(undefined) }} >
           <AlertTitle>Error</AlertTitle>
