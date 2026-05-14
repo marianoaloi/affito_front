@@ -5,7 +5,7 @@ import { AffitoEntity } from "../entity/AffitoEntity";
 import { Photo, Photos, PopUpInfo, SmallInfo, TopActionLink } from "./UdineMapComponent.styled";
 import { dataImportance, timeAgo } from "../util/timeAgo";
 import { IconButton, Tooltip } from "@mui/material";
-import { Language } from "@mui/icons-material";
+import { DirectionsRunTwoTone, Language } from "@mui/icons-material";
 
 
 function PopupContent({
@@ -56,6 +56,9 @@ function PopupContent({
         return choiceProp?.value ? "♿" : "❌";
     }
 
+    const TriestPoint = 'Train+station+Trieste+Centrale,+Piazza+della+Libert%C3%A0,+11,+34132+Trieste+TS'
+    const UdinePoint = "V.le+Europa+Unita,+33100+Udine+UD"
+
 
     return (
         <div>
@@ -75,6 +78,11 @@ function PopupContent({
                 onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${affito.realEstate.properties.location.latitude},${affito.realEstate.properties.location.longitude}`, '_blank')}>
                 <Language />
             </IconButton></Tooltip>
+            <Tooltip title="Open Direction"><IconButton size="small"
+                onClick={() => window.open(`https://www.google.com/maps/dir/${affito.realEstate.properties.location.province === 'Udine' ? UdinePoint : TriestPoint}/${affito.realEstate.properties.location.latitude},${affito.realEstate.properties.location.longitude}`, '_blank')}>
+                <DirectionsRunTwoTone />
+            </IconButton>
+            </Tooltip>
             <SmallInfo>
 
                 <PopUpInfo title="floor">{propt.floor?.abbreviation}</PopUpInfo>
