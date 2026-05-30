@@ -217,6 +217,36 @@ export default function UdineMapComponent() {
         dispatch(setFilterAffito({ ...filter, [field]: value }));
     }, [dispatch, filter]);
 
+    const resetFilter = useCallback(() => {
+        dispatch(setFilterAffito({ ...filter, 
+            "floor": undefined, 
+            "elevator": undefined, 
+            "stateMaloi": undefined, 
+            "accessoDisabili": undefined
+         }));
+    }, [dispatch, filter]);
+
+    const filterDisable = useCallback(() => {
+        dispatch(setFilterAffito({ ...filter, 
+            "floor": undefined, 
+            "elevator": undefined, 
+            "stateMaloi": undefined, 
+            "accessoDisabili": 1
+         }));
+    }, [dispatch, filter]);
+
+    const filterEmptyChoise = useCallback(() => {
+        dispatch(setFilterAffito({ ...filter, 
+            "floor": undefined, 
+            "elevator": undefined, 
+            "stateMaloi": -1, 
+            "accessoDisabili": undefined
+         }));
+    }, [dispatch, filter]);
+
+
+
+
 
 
     return (
@@ -238,6 +268,9 @@ export default function UdineMapComponent() {
                 changeFilterStatus={changeFilterStatus}
                 changeMap={changeMap}
                 rejectAll={rejectAll}
+                resetFilter={resetFilter}
+                filterDisable={filterDisable}
+                filterEmptyChoise={filterEmptyChoise}
             />
             <MapContainer center={[mapState.latitude, mapState.longitude]} zoom={mapState.zoom} style={{ height: "calc(100% - 65px)", width: "100%" }}>
                 <MapEventHandler />

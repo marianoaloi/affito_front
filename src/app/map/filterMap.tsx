@@ -12,10 +12,13 @@ interface FilterMapProps {
     changeFilterStatus: (field: string, value: 0 | 1 | 2 | -1 | undefined | string) => void;
     changeMap: (newMapState: { latitude: number; longitude: number; zoom: number; local: string }) => void;
     rejectAll: () => void;
+    resetFilter: () => void;
+    filterDisable: () => void;
+    filterEmptyChoise: () => void;
 
 }
 
-export default function FilterMap({ affiti, filter, changeFilterStatus, changeMap , rejectAll }: FilterMapProps) {
+export default function FilterMap({ affiti, filter, changeFilterStatus, changeMap , rejectAll,resetFilter,filterDisable , filterEmptyChoise }: FilterMapProps) {
     const [open, setOpen] = useState(true);
     const elevatorCount = affiti.map(a => a.realEstate?.properties?.mainFeatures?.find(f => f.type === "elevator")?.compactLabel);
 
@@ -33,9 +36,9 @@ export default function FilterMap({ affiti, filter, changeFilterStatus, changeMa
                     {counters.filter(count => count._id.province === filter.province && count._id.type === filter.type).map(counter => (
                         <QtdMap key={counter._id.province + counter._id.type}>
                             <strong>{counter._id.type === 'a' ? 'Affito' : 'Compra'} in {counter._id.province} : </strong>
-                            <span>{counter.total} </span>
-                            <span style={{ backgroundColor: "#ffffff", color: "black", border: "1px solid black" }} >♿ {counter.disable} </span>
-                            <span style={{ backgroundColor: "#1976d2" }}>{counter.emptyChoise}</span>
+                            <span onClick={() => resetFilter()}>{counter.total} </span>
+                            <span onClick={() => filterDisable()} style={{ backgroundColor: "#ffffff", color: "black", border: "1px solid black" }} >♿ {counter.disable} </span>
+                            <span onClick={() => filterEmptyChoise()} style={{ backgroundColor: "#1976d2" }}>{counter.emptyChoise}</span>
                         </QtdMap>
                     ))}
                 </div>
@@ -47,11 +50,6 @@ export default function FilterMap({ affiti, filter, changeFilterStatus, changeMa
             </div>
             {open && (
                 <>
-                    <QtdMap>
-                        <strong>Terra</strong>
-                        <input type="checkbox" checked={filter.floor === "Terra"} onChange={(ev) => changeFilterStatus("floor", ev.target.checked ? "Terra" : undefined)} />
-
-                    </QtdMap>
                     <QtdMap>
                         <strong>Elevator:</strong>
                         <span className={addBoardSelect(filter.elevator, undefined)} onClick={() => changeFilterStatus("elevator", undefined)}>{affiti.length}</span>
@@ -86,7 +84,14 @@ export default function FilterMap({ affiti, filter, changeFilterStatus, changeMa
                         <span className={addBoardSelect(filter.type, "c")} onClick={() => changeFilterStatus("type", 'c')}>Compra</span>
 
                     </LuogoMap>
+                        <hr/>
                     <LuogoMap>
+                        
+                    <QtdMap>
+                        <strong>Terra</strong>
+                        <input type="checkbox" checked={filter.floor === "Terra"} onChange={(ev) => changeFilterStatus("floor", ev.target.checked ? "Terra" : undefined)} />
+
+                    </QtdMap>
                     <span style={{
                         color: "black", 
                         background: "red", 

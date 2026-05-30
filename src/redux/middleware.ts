@@ -1,6 +1,8 @@
 import { createLogger } from 'redux-logger'
+import { affitoApi } from './services/affito/affitoApi'
 
 const middleware = [
+    affitoApi.middleware,
     createLogger({
         duration: true,
         timestamp: false,

@@ -64,6 +64,16 @@ function PopupContent({
         <div>
             <TopActionLink>
                 <ChoiceState stateMaloi={affito.stateMaloi} id={affito._id} closePopup={closePopup} />
+                
+            <Tooltip title="Open Maps"><IconButton size="small"
+                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${affito.realEstate.properties.location.latitude},${affito.realEstate.properties.location.longitude}`, '_blank')}>
+                <Language />
+            </IconButton></Tooltip>
+            <Tooltip title="Open Direction"><IconButton size="small"
+                onClick={() => window.open(`https://www.google.com/maps/dir/${affito.realEstate.properties.location.province === 'Udine' ? UdinePoint : TriestPoint}/${affito.realEstate.properties.location.latitude},${affito.realEstate.properties.location.longitude}`, '_blank')}>
+                <DirectionsRunTwoTone />
+            </IconButton>
+            </Tooltip>
                 <a
                     href={`https://www.immobiliare.it/annunci/${affito._id}`}
                     target="_blank"
@@ -74,15 +84,6 @@ function PopupContent({
                 </a>
             </TopActionLink>
             {affito.realEstate.title}
-            <Tooltip title="Open Maps"><IconButton size="small"
-                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${affito.realEstate.properties.location.latitude},${affito.realEstate.properties.location.longitude}`, '_blank')}>
-                <Language />
-            </IconButton></Tooltip>
-            <Tooltip title="Open Direction"><IconButton size="small"
-                onClick={() => window.open(`https://www.google.com/maps/dir/${affito.realEstate.properties.location.province === 'Udine' ? UdinePoint : TriestPoint}/${affito.realEstate.properties.location.latitude},${affito.realEstate.properties.location.longitude}`, '_blank')}>
-                <DirectionsRunTwoTone />
-            </IconButton>
-            </Tooltip>
             <SmallInfo>
 
                 <PopUpInfo title="floor">{propt.floor?.abbreviation}</PopUpInfo>
@@ -90,9 +91,8 @@ function PopupContent({
                 <PopUpInfo title="m²">{getMainFeaturesPropertie('surface')}</PopUpInfo>
                 <PopUpInfo title="Disable">{getPrimaryFeaturesPropertie('Accesso per disabili')}</PopUpInfo>
 
-                <PopUpInfo title={`create ${dataImportance(affito.create)} ${dataImportance(affito.realEstate.createdAt)}`}>{timeAgo(affito.create)}[{timeAgo(affito.realEstate.createdAt)}]</PopUpInfo>
-                <PopUpInfo title="Imobiliare">{timeAgo(affito.imobiliare)}</PopUpInfo>
-                <PopUpInfo title={`last ${dataImportance(affito.last)} ${dataImportance(affito.realEstate.updatedAt)}`}>{timeAgo(affito.last)}[{timeAgo(affito.realEstate.updatedAt)}]</PopUpInfo>
+                <PopUpInfo title={`create me ${dataImportance(affito.create)} imobbiliare ${dataImportance(affito.realEstate.createdAt)}`}>{timeAgo(affito.realEstate.createdAt)}</PopUpInfo>                
+                <PopUpInfo title={`last me ${dataImportance(affito.last)} imobbiliare ${dataImportance(affito.realEstate.updatedAt)}`}>{timeAgo(affito.realEstate.updatedAt)}</PopUpInfo>
                 <PopUpInfo title="elevation">{affito.elevation ? Math.ceil(affito.elevation) + 'm' : ''}</PopUpInfo>
                 <PopUpInfo title="contract">{affito.realEstate.contractValue}</PopUpInfo>
 
