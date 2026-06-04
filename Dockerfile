@@ -43,6 +43,7 @@ COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
 
 ENV NODE_ENV=production
+ENV BACKEND_PORT=5078
 
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
@@ -83,6 +84,7 @@ COPY --chown=nginx:nginx --from=builder /app/out /usr/share/nginx/html
 
 # Non-root user for security best practices
 USER nginx
+ENV BACKEND_PORT=5078
 
 # Expose port 8080 to allow HTTP traffic
 EXPOSE 8080
